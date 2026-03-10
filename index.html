@@ -2,9 +2,7 @@
 <html>
 
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Smart Menu Translator</title>
 
 <style>
@@ -25,6 +23,7 @@ padding:14px;
 border-radius:12px;
 margin-top:10px;
 box-shadow:0 3px 10px rgba(0,0,0,0.15);
+cursor:pointer;
 }
 
 .desc{
@@ -45,53 +44,29 @@ font-size:0.9em;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <h2>Translated Menu</h2>
-
 <div id="menu"></div>
 
 <script>
 
-const params=new URLSearchParams(window.location.search)
-const menuText=decodeURIComponent(params.get("menu"))
-  
-if(menuText){
-
-const lines = menuText.split("\n")
-
-const container = document.getElementById("menu")
-
-lines.forEach(item => {
-
-const dish = document.createElement("div")
-dish.className = "dish"
-dish.innerHTML = "<b>" + item + "</b>"
-
-dish.onclick = function(){
-
-alert("Description for: " + item)
-
-}
-
-container.appendChild(dish)
-
-})
-
-}
+const params = new URLSearchParams(window.location.search)
+const menuText = params.get("menu")
 
 async function interpretMenu(){
 
-const response=await fetch("https://api.openai.com/v1/chat/completions",{
+if(!menuText) return
+
+const response = await fetch("https://api.openai.com/v1/chat/completions",{
 
 method:"POST",
 
 headers:{
 "Content-Type":"application/json",
-"Authorization":"Bearer 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"
+"Authorization":"Bearer YOUR_API_KEY"
 },
 
 body:JSON.stringify({
@@ -99,18 +74,18 @@ body:JSON.stringify({
 model:"gpt-4.1-mini",
 
 messages:[
-
 {
 role:"system",
-content:"Interpret restaurant menus. Detect language and convert menu to JSON with sections, dish name, description, ingredients and allergens."
+content:"You interpret restaurant menus. Translate to English and return JSON with sections, dish names, descriptions, ingredients and allergens."
 },
-
 {
 role:"user",
-content:`Menu text:${menuText}
+content:`Menu text:
+${decodeURIComponent(menuText)}
+
 Return JSON format:
+
 {
-language:"",
 sections:[
 {
 name:"",
@@ -133,9 +108,9 @@ allergens:""
 
 })
 
-const data=await response.json()
+const data = await response.json()
 
-const menuJSON=JSON.parse(data.choices[0].message.content)
+const menuJSON = JSON.parse(data.choices[0].message.content)
 
 renderMenu(menuJSON)
 
@@ -158,7 +133,6 @@ const dish=document.createElement("div")
 dish.className="dish"
 
 dish.innerHTML=`
-
 <b>${item.name}</b>
 
 <div class="desc">
@@ -172,14 +146,13 @@ ${item.description}<br>
 <img src="https://source.unsplash.com/600x400/?${item.name},food">
 
 </div>
-
 `
 
 dish.onclick=function(){
 
 const d=this.querySelector(".desc")
 
-d.style.display=d.style.display==="block"?"none":"block"
+d.style.display = d.style.display==="block" ? "none" : "block"
 
 }
 
@@ -198,5 +171,4 @@ interpretMenu()
 </script>
 
 </body>
-
 </html>
