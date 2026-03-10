@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Smart Menu Translator</title>
+
+<style>
+
+body{
+font-family:system-ui;
+background:#f6f6f6;
+padding:20px;
+}
+
+.section{
+margin-top:25px;
+}
+
+.dish{
+background:white;
+padding:14px;
+border-radius:12px;
+margin-top:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.15);
+}
+
+.desc{
+display:none;
+margin-top:8px;
+color:#444;
+}
+
+img{
+width:100%;
+border-radius:10px;
+margin-top:10px;
+}
+
+.allergy{
+color:#b30000;
+font-size:0.9em;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Translated Menu</h2>
+
+<div id="menu"></div>
+
+<script>
+
+const params=new URLSearchParams(window.location.search)
+const menuText=decodeURIComponent(params.get("menu"))
+
+async function interpretMenu(){
+
+const response=await fetch("https://api.openai.com/v1/chat/completions",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer YOUR_API_KEY"
+},
+
+body:JSON.stringify({
+
+model:"gpt-4.1-mini",
+
+messages:[
+
+{
+role:"system",
+content:"Interpret restaurant menus. Detect language and convert menu to JSON with sections, dish name, description, ingredients and allergens."
+},
+
+{
+role:"user",
+content:`Menu text:${menuText}
+Return JSON format:
+{
+language:"",
+sections:[
+{
+name:"",
+items:[
+{
+name:"",
+description:"",
+ingredients:"",
+allergens:""
+}
+]
+}
+]
+}`
+}
+
+]
+
+})
+
+})
+
+const data=await response.json()
+
+const menuJSON=JSON.parse(data.choices[0].message.content)
+
+renderMenu(menuJSON)
+
+}
+
+function renderMenu(menu){
+
+const container=document.getElementById("menu")
+
+menu.sections.forEach(section=>{
+
+const sec=document.createElement("div")
+sec.className="section"
+
+sec.innerHTML=`<h3>${section.name}</h3>`
+
+section.items.forEach(item=>{
+
+const dish=document.createElement("div")
+dish.className="dish"
+
+dish.innerHTML=`
+
+<b>${item.name}</b>
+
+<div class="desc">
+
+${item.description}<br>
+
+<i>${item.ingredients}</i><br>
+
+<div class="allergy">${item.allergens}</div>
+
+<img src="https://source.unsplash.com/600x400/?${item.name},food">
+
+</div>
+
+`
+
+dish.onclick=function(){
+
+const d=this.querySelector(".desc")
+
+d.style.display=d.style.display==="block"?"none":"block"
+
+}
+
+sec.appendChild(dish)
+
+})
+
+container.appendChild(sec)
+
+})
+
+}
+
+interpretMenu()
+
+</script>
+
+</body>
+
+</html>
