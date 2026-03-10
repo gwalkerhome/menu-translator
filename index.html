@@ -110,6 +110,8 @@ allergens:""
 
 const data = await response.json()
 
+alert(JSON.stringify(data))
+  
 const menuJSON = JSON.parse(data.choices[0].message.content)
 
 renderMenu(menuJSON)
