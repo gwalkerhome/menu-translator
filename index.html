@@ -58,6 +58,30 @@ font-size:0.9em;
 
 const params=new URLSearchParams(window.location.search)
 const menuText=decodeURIComponent(params.get("menu"))
+  
+if(menuText){
+
+const lines = menuText.split("\n")
+
+const container = document.getElementById("menu")
+
+lines.forEach(item => {
+
+const dish = document.createElement("div")
+dish.className = "dish"
+dish.innerHTML = "<b>" + item + "</b>"
+
+dish.onclick = function(){
+
+alert("Description for: " + item)
+
+}
+
+container.appendChild(dish)
+
+})
+
+}
 
 async function interpretMenu(){
 
