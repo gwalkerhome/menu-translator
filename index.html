@@ -110,6 +110,15 @@ allergens:""
 
 const data = await response.json()
 
+if(data.error){
+alert("API Error: " + data.error.message)
+return
+}
+
+alert("API responded")
+
+const menuJSON = JSON.parse(data.choices[0].message.content)
+
 alert(JSON.stringify(data))
   
 const menuJSON = JSON.parse(data.choices[0].message.content)
