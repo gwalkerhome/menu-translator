@@ -54,11 +54,16 @@ font-size:0.9em;
 <script>
 
 const params = new URLSearchParams(window.location.search)
-const menuText = params.get("menu")
+
+let menuText = params.get("menu")
+
+if(!menuText){
+menuText = "paella valenciana\ngambas al ajillo\npulpo a la gallega"
+}
+
+menuText = decodeURIComponent(menuText)
 
 async function interpretMenu(){
-
-if(!menuText) return
 
 const response = await fetch("https://api.openai.com/v1/chat/completions",{
 
@@ -66,7 +71,7 @@ method:"POST",
 
 headers:{
 "Content-Type":"application/json",
-"Authorization":"Bearer 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"
+"Authorization":"Bearer YOUR_API_KEY"
 },
 
 body:JSON.stringify({
@@ -76,12 +81,12 @@ model:"gpt-4.1-mini",
 messages:[
 {
 role:"system",
-content:"You interpret restaurant menus. Translate to English and return JSON with sections, dish names, descriptions, ingredients and allergens."
+content:"You interpret restaurant menus and translate them into English returning structured JSON."
 },
 {
 role:"user",
 content:`Menu text:
-${decodeURIComponent(menuText)}
+${menuText}
 
 Return JSON format:
 
@@ -110,17 +115,6 @@ allergens:""
 
 const data = await response.json()
 
-if(data.error){
-alert("API Error: " + data.error.message)
-return
-}
-
-alert("API responded")
-
-const menuJSON = JSON.parse(data.choices[0].message.content)
-
-alert(JSON.stringify(data))
-  
 const menuJSON = JSON.parse(data.choices[0].message.content)
 
 renderMenu(menuJSON)
@@ -147,15 +141,10 @@ dish.innerHTML=`
 <b>${item.name}</b>
 
 <div class="desc">
-
 ${item.description}<br>
-
 <i>${item.ingredients}</i><br>
-
 <div class="allergy">${item.allergens}</div>
-
 <img src="https://source.unsplash.com/600x400/?${item.name},food">
-
 </div>
 `
 
