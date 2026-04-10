@@ -568,6 +568,7 @@ line-height: 1.6;
 
 <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handlePhoto(this)">
 <p class="hint">Works with Spanish, Catalan, Italian,<br>French, and more.</p>
+<button onclick="resetApiKey()" style="background:none;border:none;color:var(--muted);font-size:11px;font-family:'Lato',sans-serif;cursor:pointer;text-decoration:underline;margin-top:24px;">Change API key</button>
 ```
 
   </div>
@@ -619,12 +620,38 @@ line-height: 1.6;
 
 <script>
   // ── CONFIG ──────────────────────────────────────────────────────────
-  const API_KEY = "YOUR_OPENAI_API_KEY_HERE";
-  const imageCache = {};   // in-memory cache: dish name → data URL
+  let API_KEY = localStorage.getItem('lacarta_api_key') || '';
+  const imageCache = {};
+
+  // ── STARTUP ─────────────────────────────────────────────────────────
+  function init() {
+    if (!API_KEY) {
+      show('setup-screen');
+    } else {
+      show('home-screen');
+    }
+  }
+
+  function saveApiKey() {
+    const input = document.getElementById('api-key-input').value.trim();
+    if (!input.startsWith('sk-')) {
+      alert('That doesn\'t look like a valid API key. It should start with sk-');
+      return;
+    }
+    API_KEY = input;
+    localStorage.setItem('lacarta_api_key', API_KEY);
+    show('home-screen');
+  }
+
+  function resetApiKey() {
+    localStorage.removeItem('lacarta_api_key');
+    API_KEY = '';
+    show('setup-screen');
+  }
 
   // ── NAVIGATION ──────────────────────────────────────────────────────
   function show(id) {
-    ['home-screen','loading-screen','result-screen'].forEach(s => {
+    ['home-screen','loading-screen','result-screen','setup-screen'].forEach(s => {
       document.getElementById(s).style.display = 'none';
     });
     document.getElementById(id).style.display = 'flex';
@@ -634,6 +661,9 @@ line-height: 1.6;
     document.getElementById('file-input').value = '';
     show('home-screen');
   }
+
+  // Run on load
+  init();
 
   // ── PHOTO HANDLING ───────────────────────────────────────────────────
   async function handlePhoto(input) {
