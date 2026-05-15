@@ -7,599 +7,1033 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="La Carta">
-
 <link rel="apple-touch-icon" href="icon.png">
 
-  
-<title>La Carta</title>
+<title>v3 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    --red: #c8472e;
-    --red-dark: #a33520;
-    --cream: #f5f0e8;
-    --cream-dark: #ede6d6;
-    --ink: #1a1208;
-    --muted: #7a6e5f;
-    --white: #ffffff;
-    --shadow: 0 4px 24px rgba(26,18,8,0.13);
-    --shadow-lg: 0 8px 40px rgba(26,18,8,0.18);
+    --bg:              #1C0B05;
+    --bg-mid:          #2A1208;
+    --terracotta:      #C8472E;
+    --terracotta-dark: #A33520;
+    --gold:            #D4A843;
+    --gold-soft:       #B8904A;
+    --cream:           #F5EDD8;
+    --cream-soft:      #E0CBA8;
+    --muted:           #9A8060;
+    --shadow:          0 4px 24px rgba(0,0,0,0.4);
+    --shadow-lg:       0 8px 40px rgba(0,0,0,0.55);
   }
 
-- { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-font-family: ‘Lato’, sans-serif;
-background: var(–cream);
-color: var(–ink);
-min-height: 100vh;
-min-height: -webkit-fill-available;
-overflow-x: hidden;
-}
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--bg);
+    color: var(--cream);
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-/* ── HOME SCREEN ── */
-#home-screen {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-min-height: 100vh;
-min-height: -webkit-fill-available;
-padding: 40px 24px;
-position: relative;
-overflow: hidden;
-}
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-#home-screen::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background:
-radial-gradient(ellipse at 20% 20%, rgba(200,71,46,0.07) 0%, transparent 60%),
-radial-gradient(ellipse at 80% 80%, rgba(200,71,46,0.05) 0%, transparent 60%);
-pointer-events: none;
-}
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-.tile-bg {
-position: absolute;
-inset: 0;
-background-image: repeating-linear-gradient(
-45deg,
-transparent,
-transparent 40px,
-rgba(200,71,46,0.03) 40px,
-rgba(200,71,46,0.03) 41px
-),
-repeating-linear-gradient(
--45deg,
-transparent,
-transparent 40px,
-rgba(200,71,46,0.03) 40px,
-rgba(200,71,46,0.03) 41px
-);
-pointer-events: none;
-}
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 
-.home-content {
-position: relative;
-text-align: center;
-max-width: 420px;
-width: 100%;
-animation: fadeUp 0.7s ease both;
-}
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-@keyframes fadeUp {
-from { opacity: 0; transform: translateY(24px); }
-to   { opacity: 1; transform: translateY(0); }
-}
+  @keyframes scaleIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
 
-.brand-mark {
-display: inline-block;
-width: 72px;
-height: 72px;
-background: var(–red);
-border-radius: 18px;
-margin-bottom: 20px;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 36px;
-box-shadow: var(–shadow);
-margin: 0 auto 20px;
-}
+  /* ── HOME SCREEN ── */
+  #home-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding: 48px 24px;
+    position: relative;
+    overflow: hidden;
+  }
 
-h1 {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(42px, 10vw, 64px);
-font-weight: 700;
-letter-spacing: -1px;
-color: var(–ink);
-line-height: 1;
-margin-bottom: 8px;
-}
+  #home-screen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 55% at 50% 38%, rgba(200,71,46,0.14) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 95%, rgba(212,168,67,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-.tagline {
-font-family: ‘Playfair Display’, serif;
-font-style: italic;
-font-size: clamp(15px, 3.5vw, 18px);
-color: var(–muted);
-margin-bottom: 48px;
-font-weight: 400;
-}
+  /* Profile icon — top right of home screen */
+  .profile-icon-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(212,168,67,0.08);
+    border: 1px solid rgba(212,168,67,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--gold-soft);
+    transition: background 0.2s, border-color 0.2s;
+  }
 
-.divider {
-width: 48px;
-height: 2px;
-background: var(–red);
-margin: 16px auto 32px;
-}
+  .profile-icon-btn.has-profile {
+    background: rgba(212,168,67,0.15);
+    border-color: var(--gold);
+  }
 
-.capture-btn {
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 12px;
-width: 100%;
-max-width: 320px;
-margin: 0 auto;
-padding: 20px 28px;
-background: var(–red);
-color: white;
-border: none;
-border-radius: 16px;
-font-family: ‘Lato’, sans-serif;
-font-size: 18px;
-font-weight: 700;
-letter-spacing: 0.3px;
-cursor: pointer;
-box-shadow: 0 4px 20px rgba(200,71,46,0.35);
-transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-position: relative;
-overflow: hidden;
-}
+  .home-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    animation: fadeUp 0.9s ease both;
+  }
 
-.capture-btn::after {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
-pointer-events: none;
-}
+  .ornament-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 44px;
+    color: var(--gold-soft);
+    font-size: 12px;
+    letter-spacing: 4px;
+  }
 
-.capture-btn:active {
-transform: scale(0.97);
-box-shadow: 0 2px 10px rgba(200,71,46,0.25);
-background: var(–red-dark);
-}
+  .ornament-top::before,
+  .ornament-top::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    max-width: 90px;
+  }
 
-.capture-btn .icon {
-font-size: 24px;
-line-height: 1;
-}
+  .ornament-top::before {
+    background: linear-gradient(to right, transparent, var(--gold-soft));
+  }
 
-#file-input {
-display: none;
-}
+  .ornament-top::after {
+    background: linear-gradient(to left, transparent, var(--gold-soft));
+  }
 
-.hint {
-margin-top: 20px;
-font-size: 13px;
-color: var(–muted);
-font-weight: 300;
-}
+  .brand-mark {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(212,168,67,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 28px;
+    position: relative;
+    box-shadow: 0 0 40px rgba(212,168,67,0.12), inset 0 0 24px rgba(212,168,67,0.06);
+  }
 
-/* ── LOADING SCREEN ── */
-#loading-screen {
-display: none;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-min-height: 100vh;
-min-height: -webkit-fill-available;
-padding: 40px 24px;
-text-align: center;
-animation: fadeUp 0.4s ease both;
-}
+  .brand-mark::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    border: 1px solid rgba(212,168,67,0.2);
+  }
 
-.spinner-wrap {
-margin-bottom: 32px;
-}
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(54px, 14vw, 74px);
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 22px;
+  }
 
-.spinner {
-width: 56px;
-height: 56px;
-border: 3px solid var(–cream-dark);
-border-top-color: var(–red);
-border-radius: 50%;
-animation: spin 0.9s linear infinite;
-margin: 0 auto;
-}
+  .ornament-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 0 auto 22px;
+    color: var(--gold);
+    font-size: 10px;
+  }
 
-@keyframes spin {
-to { transform: rotate(360deg); }
-}
+  .ornament-divider::before {
+    content: '';
+    width: 52px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+  }
 
-.loading-title {
-font-family: ‘Playfair Display’, serif;
-font-size: 26px;
-font-weight: 700;
-margin-bottom: 10px;
-}
+  .ornament-divider::after {
+    content: '';
+    width: 52px;
+    height: 1px;
+    background: linear-gradient(to left, transparent, var(--gold));
+  }
 
-.loading-sub {
-font-size: 15px;
-color: var(–muted);
-font-weight: 300;
-}
+  .tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(15px, 4vw, 19px);
+    color: var(--cream-soft);
+    margin-bottom: 10px;
+    font-weight: 400;
+    line-height: 1.65;
+  }
 
-/* ── RESULT SCREEN ── */
-#result-screen {
-display: none;
-flex-direction: column;
-min-height: 100vh;
-animation: fadeUp 0.5s ease both;
-}
+  .byline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 56px;
+  }
 
-.result-header {
-position: sticky;
-top: 0;
-z-index: 10;
-background: var(–cream);
-border-bottom: 1px solid var(–cream-dark);
-padding: 14px 20px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-box-shadow: 0 2px 12px rgba(26,18,8,0.07);
-}
+  .capture-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    padding: 22px 28px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 55%, var(--terracotta-dark) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    box-shadow:
+      0 8px 32px rgba(200,71,46,0.45),
+      0 1px 0 rgba(255,255,255,0.12) inset,
+      0 -2px 0 rgba(0,0,0,0.2) inset;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
 
-.result-header h2 {
-font-family: ‘Playfair Display’, serif;
-font-size: 22px;
-font-weight: 700;
-}
+  .capture-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(255,255,255,0.1) 0%, transparent 55%);
+    pointer-events: none;
+  }
 
-.back-btn {
-background: none;
-border: none;
-font-family: ‘Lato’, sans-serif;
-font-size: 15px;
-font-weight: 700;
-color: var(–red);
-cursor: pointer;
-padding: 6px 0;
-display: flex;
-align-items: center;
-gap: 6px;
-}
+  .capture-btn:active {
+    transform: scale(0.97) translateY(1px);
+    box-shadow: 0 4px 16px rgba(200,71,46,0.35);
+  }
 
-.result-body {
-padding: 24px 20px 60px;
-max-width: 680px;
-margin: 0 auto;
-width: 100%;
-line-height: 1.75;
-}
+  .capture-btn .icon { font-size: 22px; line-height: 1; }
 
-.result-body h2 {
-font-family: ‘Playfair Display’, serif;
-font-size: 22px;
-font-weight: 700;
-color: var(–red);
-margin: 32px 0 10px;
-padding-bottom: 6px;
-border-bottom: 1px solid var(–cream-dark);
-}
+  #file-input { display: none; }
 
-.result-body h2:first-child { margin-top: 0; }
+  .hint {
+    margin-top: 22px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
 
-.result-body h3 {
-font-family: ‘Playfair Display’, serif;
-font-size: 18px;
-font-style: italic;
-margin: 20px 0 6px;
-color: var(–ink);
-}
+  .reset-link {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 11px;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 28px;
+    display: block;
+    opacity: 0.55;
+    transition: opacity 0.2s;
+  }
 
-.result-body p {
-font-size: 15px;
-color: #3a3020;
-margin-bottom: 6px;
-}
+  .reset-link:hover { opacity: 1; }
 
-.result-body hr {
-border: none;
-border-top: 1px solid var(–cream-dark);
-margin: 20px 0;
-}
+  .ornament-bottom {
+    position: absolute;
+    bottom: 36px;
+    left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    gap: 12px;
+    color: rgba(212,168,67,0.35);
+    font-size: 10px;
+  }
 
-.dish-row {
-display: flex;
-align-items: flex-start;
-justify-content: space-between;
-gap: 10px;
-margin-bottom: 4px;
-}
+  .ornament-bottom::before,
+  .ornament-bottom::after {
+    content: '';
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(212,168,67,0.3), transparent);
+  }
 
-.dish-text {
-flex: 1;
-font-size: 15px;
-color: #3a3020;
-}
+  /* ── SHARED HEADER ── */
+  .screen-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.4);
+  }
 
-.dish-text b {
-font-weight: 700;
-color: var(–ink);
-}
+  .screen-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+  }
 
-.img-btn {
-flex-shrink: 0;
-background: none;
-border: 1.5px solid var(–red);
-color: var(–red);
-border-radius: 8px;
-padding: 3px 9px;
-font-size: 15px;
-cursor: pointer;
-transition: background 0.15s, color 0.15s;
-line-height: 1.4;
-margin-top: 1px;
-}
+  .back-btn {
+    background: none;
+    border: none;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    cursor: pointer;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.3px;
+  }
 
-.img-btn:active {
-background: var(–red);
-color: white;
-}
+  /* ── LOADING SCREEN ── */
+  #loading-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding: 40px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.4s ease both;
+  }
 
-/* ── IMAGE MODAL ── */
-#image-modal {
-display: none;
-position: fixed;
-inset: 0;
-z-index: 100;
-background: rgba(10,6,2,0.88);
-align-items: center;
-justify-content: center;
-padding: 24px;
-animation: fadeIn 0.25s ease both;
-}
+  .spinner-wrap { margin-bottom: 36px; }
 
-@keyframes fadeIn {
-from { opacity: 0; }
-to   { opacity: 1; }
-}
+  .spinner {
+    width: 56px;
+    height: 56px;
+    border: 2px solid rgba(212,168,67,0.15);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
 
-#image-modal.visible {
-display: flex;
-}
+  .loading-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 10px;
+  }
 
-.modal-inner {
-position: relative;
-max-width: 480px;
-width: 100%;
-animation: scaleIn 0.25s ease both;
-}
+  .loading-sub {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
 
-@keyframes scaleIn {
-from { transform: scale(0.92); opacity: 0; }
-to   { transform: scale(1); opacity: 1; }
-}
+  /* ── RESULT SCREEN ── */
+  #result-screen {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.5s ease both;
+  }
 
-.modal-img {
-width: 100%;
-border-radius: 16px;
-display: block;
-box-shadow: var(–shadow-lg);
-}
+  .result-body {
+    padding: 24px 20px 60px;
+    max-width: 680px;
+    margin: 0 auto;
+    width: 100%;
+    line-height: 1.75;
+  }
 
-.modal-label {
-font-family: ‘Playfair Display’, serif;
-font-size: 20px;
-font-weight: 700;
-color: white;
-text-align: center;
-margin-top: 16px;
-}
+  .result-body h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    margin: 32px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+    letter-spacing: 0.3px;
+  }
 
-.modal-close {
-position: absolute;
-top: -14px;
-right: -14px;
-width: 36px;
-height: 36px;
-background: var(–red);
-border: none;
-border-radius: 50%;
-color: white;
-font-size: 18px;
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
+  .result-body h2:first-child { margin-top: 0; }
 
-.modal-loading {
-text-align: center;
-color: var(–muted);
-padding: 40px 0;
-}
+  .result-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-style: italic;
+    margin: 20px 0 6px;
+    color: var(--cream-soft);
+  }
 
-.modal-spinner {
-width: 40px;
-height: 40px;
-border: 3px solid rgba(255,255,255,0.2);
-border-top-color: white;
-border-radius: 50%;
-animation: spin 0.9s linear infinite;
-margin: 0 auto 16px;
-}
+  .result-body p {
+    font-size: 15px;
+    color: var(--cream-soft);
+    margin-bottom: 6px;
+  }
 
-.modal-loading p {
-color: rgba(255,255,255,0.6);
-font-size: 14px;
-}
+  .result-body hr {
+    border: none;
+    border-top: 1px solid rgba(212,168,67,0.12);
+    margin: 20px 0;
+  }
 
-/* ── SETUP SCREEN ── */
-#setup-screen {
-display: none;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-min-height: 100vh;
-min-height: -webkit-fill-available;
-padding: 40px 24px;
-text-align: center;
-animation: fadeUp 0.7s ease both;
-}
+  .dish-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
 
-.setup-card {
-background: white;
-border-radius: 20px;
-padding: 36px 28px;
-max-width: 400px;
-width: 100%;
-box-shadow: var(–shadow-lg);
-}
+  .dish-text {
+    flex: 1;
+    font-size: 15px;
+    color: var(--cream-soft);
+  }
 
-.setup-card h2 {
-font-family: ‘Playfair Display’, serif;
-font-size: 24px;
-font-weight: 700;
-margin-bottom: 10px;
-}
+  .dish-text b { font-weight: 700; color: var(--cream); }
 
-.setup-card p {
-font-size: 14px;
-color: var(–muted);
-line-height: 1.7;
-margin-bottom: 24px;
-}
+  .img-btn {
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid rgba(212,168,67,0.35);
+    color: var(--gold);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    line-height: 1.4;
+    margin-top: 1px;
+  }
 
-.setup-card a {
-color: var(–red);
-text-decoration: none;
-}
+  .img-btn:active {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+  }
 
-.key-input {
-width: 100%;
-padding: 14px 16px;
-border: 1.5px solid var(–cream-dark);
-border-radius: 12px;
-font-family: ‘Lato’, sans-serif;
-font-size: 14px;
-color: var(–ink);
-background: var(–cream);
-margin-bottom: 14px;
-outline: none;
-transition: border-color 0.2s;
-}
+  /* Recommendation section */
+  .recommend-wrap {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(212,168,67,0.15);
+  }
 
-.key-input:focus {
-border-color: var(–red);
-}
+  .recommend-btn {
+    display: block;
+    width: 100%;
+    padding: 16px 20px;
+    background: none;
+    border: 1px solid rgba(212,168,67,0.35);
+    border-radius: 12px;
+    color: var(--gold);
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, border-color 0.2s;
+    text-align: center;
+  }
 
-.save-btn {
-width: 100%;
-padding: 16px;
-background: var(–red);
-color: white;
-border: none;
-border-radius: 12px;
-font-family: ‘Lato’, sans-serif;
-font-size: 16px;
-font-weight: 700;
-cursor: pointer;
-transition: background 0.15s;
-}
+  .recommend-btn:hover {
+    background: rgba(212,168,67,0.07);
+    border-color: var(--gold);
+  }
 
-.save-btn:active { background: var(–red-dark); }
+  .recommend-card {
+    margin-top: 20px;
+    padding: 22px;
+    background: rgba(212,168,67,0.07);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 14px;
+  }
 
-.setup-hint {
-margin-top: 16px;
-font-size: 12px;
-color: var(–muted);
-line-height: 1.6;
-}
+  .recommend-card-label {
+    font-family: 'Lato', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 12px;
+  }
 
-.reset-key-btn {
-background: none;
-border: none;
-color: var(–muted);
-font-size: 12px;
-font-family: ‘Lato’, sans-serif;
-cursor: pointer;
-text-decoration: underline;
-margin-top: 20px;
-display: block;
-margin-left: auto;
-}
+  .recommend-card-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--cream-soft);
+    line-height: 1.75;
+  }
 
-/* ── ERROR ── */
-.error-box {
-background: #fff0ee;
-border: 1px solid #f5bdb5;
-border-radius: 12px;
-padding: 20px;
-margin: 20px 0;
-color: var(–red-dark);
-font-size: 14px;
-line-height: 1.6;
-}
+  .recommend-spinner {
+    width: 28px;
+    height: 28px;
+    border: 2px solid rgba(212,168,67,0.15);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 16px auto;
+  }
 
-.error-box strong { display: block; margin-bottom: 6px; font-size: 15px; }
+  /* ── PROFILE SCREEN ── */
+  #profile-screen {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .profile-body {
+    padding: 24px 20px 60px;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .profile-intro {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 32px;
+    text-align: center;
+    padding: 16px;
+    border: 1px solid rgba(212,168,67,0.12);
+    border-radius: 12px;
+  }
+
+  .profile-section {
+    margin-bottom: 36px;
+  }
+
+  .profile-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+    letter-spacing: 0.3px;
+  }
+
+  .profile-label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .profile-select,
+  .profile-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .profile-select:focus,
+  .profile-input:focus { border-color: var(--gold); }
+
+  .profile-select option { background: #2A1208; color: var(--cream); }
+
+  .profile-input::placeholder { color: var(--muted); }
+
+  /* Toggle pills */
+  .pill-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pill {
+    padding: 9px 16px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 20px;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    background: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .pill.active {
+    background: rgba(212,168,67,0.14);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* Textarea */
+  .profile-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    outline: none;
+    resize: none;
+    height: 80px;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+
+  .profile-textarea:focus { border-color: var(--gold); }
+  .profile-textarea::placeholder { color: var(--muted); }
+
+  .profile-hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* Save / clear */
+  .profile-save-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(200,71,46,0.4);
+    transition: opacity 0.15s;
+    margin-bottom: 16px;
+  }
+
+  .profile-save-btn:active { opacity: 0.85; }
+
+  .profile-clear-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    text-decoration: underline;
+    display: block;
+    margin: 0 auto;
+    opacity: 0.6;
+  }
+
+  /* Dietary disclaimer — profile screen */
+  .dietary-warning {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: rgba(200,71,46,0.1);
+    border: 1px solid rgba(200,71,46,0.3);
+    border-radius: 10px;
+    font-size: 12px;
+    color: #f5bdb5;
+    line-height: 1.65;
+  }
+
+  .dietary-warning strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+    color: var(--cream);
+  }
+
+  /* Dietary disclaimer — results screen */
+  .results-allergen-notice {
+    padding: 14px 16px;
+    background: rgba(200,71,46,0.1);
+    border: 1px solid rgba(200,71,46,0.25);
+    border-radius: 10px;
+    font-size: 12px;
+    color: #f5bdb5;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  .results-allergen-notice strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+    color: var(--cream);
+  }
+
+  /* ── IMAGE MODAL ── */
+  #image-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(8,3,1,0.93);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: fadeIn 0.25s ease both;
+  }
+
+  #image-modal.visible { display: flex; }
+
+  .modal-inner {
+    position: relative;
+    max-width: 480px;
+    width: 100%;
+    animation: scaleIn 0.25s ease both;
+  }
+
+  .modal-img {
+    width: 100%;
+    border-radius: 14px;
+    display: block;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .modal-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-style: italic;
+    color: var(--cream);
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 36px;
+    height: 36px;
+    background: var(--terracotta);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+
+  .modal-loading { text-align: center; padding: 40px 0; }
+
+  .modal-spinner {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(212,168,67,0.15);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  .modal-loading p { color: rgba(245,237,216,0.45); font-size: 14px; }
+
+  /* ── SETUP SCREEN ── */
+  #setup-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding: 40px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .setup-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 20px;
+    padding: 36px 28px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .setup-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 10px;
+  }
+
+  .setup-card p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+  .setup-card a { color: var(--gold); text-decoration: none; }
+
+  .key-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .key-input:focus { border-color: var(--gold); }
+  .key-input::placeholder { color: var(--muted); }
+
+  .save-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(200,71,46,0.4);
+    transition: opacity 0.15s;
+  }
+
+  .save-btn:active { opacity: 0.85; }
+  .setup-hint { margin-top: 16px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* ── ERROR ── */
+  .error-box {
+    background: rgba(200,71,46,0.14);
+    border: 1px solid rgba(200,71,46,0.35);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    color: #f5bdb5;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .error-box strong { display: block; margin-bottom: 6px; font-size: 15px; color: var(--cream); }
 </style>
 
 </head>
 <body>
 
 <!-- ══ HOME SCREEN ══ -->
-
 <div id="home-screen">
-  <div class="tile-bg"></div>
+
+  <button class="profile-icon-btn" id="profile-icon-btn" onclick="showProfile()" title="Your profile">👤</button>
+
   <div class="home-content">
+    <div class="ornament-top">✦</div>
     <div class="brand-mark">🍽️</div>
     <h1>La Carta</h1>
-    <div class="divider"></div>
-    <p class="tagline">Point your camera at any menu,<br>anywhere in the world.</p>
-    <p style="font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; color: var(--muted); margin-top: -18px; margin-bottom: 36px; letter-spacing: 0.5px;">by Gary Walker</p>
+    <div class="ornament-divider">✦</div>
+    <p class="tagline">Any language. Any menu.<br>Anywhere in the world.</p>
+    <p class="byline">by Gary Walker</p>
 
-```
-<button class="capture-btn" onclick="document.getElementById('file-input').click()">
-  <span class="icon">📷</span>
-  <span>Analyse Menu</span>
-</button>
+    <button class="capture-btn" onclick="document.getElementById('file-input').click()">
+      <span class="icon">📷</span>
+      <span>Analyse Menu</span>
+    </button>
 
-<input type="file" id="file-input" accept="image/*" capture="environment" onchange="handlePhoto(this)">
-<p class="hint">Works with Spanish, Catalan, Italian,<br>French, and more.</p>
-<button onclick="resetApiKey()" style="background:none;border:none;color:var(--muted);font-size:11px;font-family:'Lato',sans-serif;cursor:pointer;text-decoration:underline;margin-top:24px;">Change API key</button>
-```
-
+    <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handlePhoto(this)">
+    <p class="hint">Any language &middot; Any cuisine &middot; Instant translation</p>
+    <button onclick="resetApiKey()" class="reset-link">Change API key</button>
   </div>
+
+  <div class="ornament-bottom">✦</div>
 </div>
 
 <!-- ══ LOADING SCREEN ══ -->
-
 <div id="loading-screen">
-  <div class="spinner-wrap">
-    <div class="spinner"></div>
-  </div>
+  <div class="spinner-wrap"><div class="spinner"></div></div>
   <p class="loading-title">Reading the menu…</p>
   <p class="loading-sub">Translating and describing each dish</p>
 </div>
 
 <!-- ══ RESULT SCREEN ══ -->
-
 <div id="result-screen">
-  <div class="result-header">
+  <div class="screen-header">
     <h2>La Carta</h2>
     <button class="back-btn" onclick="goHome()">← New menu</button>
   </div>
   <div class="result-body" id="result-body"></div>
 </div>
 
-<!-- ══ IMAGE MODAL ══ -->
+<!-- ══ PROFILE SCREEN ══ -->
+<div id="profile-screen">
+  <div class="screen-header">
+    <h2>Your Profile</h2>
+    <button class="back-btn" onclick="show('home-screen')">← Back</button>
+  </div>
+  <div class="profile-body">
 
+    <p class="profile-intro">
+      Completely optional — La Carta works perfectly without any of this.
+      Fill in what's useful to you and the app will tailor its descriptions accordingly.
+    </p>
+
+    <!-- About You -->
+    <div class="profile-section">
+      <div class="profile-section-title">About You</div>
+
+      <label class="profile-label">Language</label>
+      <select class="profile-select" id="pref-language">
+        <option value="en-GB">English (British)</option>
+        <option value="en-US">English (American)</option>
+        <option value="en-AU">English (Australian)</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="it">Italiano</option>
+        <option value="pt">Português</option>
+        <option value="nl">Nederlands</option>
+        <option value="ru">Русский</option>
+        <option value="ja">日本語</option>
+        <option value="zh">中文</option>
+      </select>
+
+      <label class="profile-label">Nationality</label>
+      <input class="profile-input" type="text" id="pref-nationality"
+        placeholder="e.g. British, American, Japanese…"
+        autocorrect="off" autocapitalize="words" spellcheck="false">
+    </div>
+
+    <!-- Dietary Requirements -->
+    <div class="profile-section">
+      <div class="profile-section-title">Dietary Requirements</div>
+      <div class="pill-grid" id="dietary-pills">
+        <button class="pill" data-value="vegetarian">Vegetarian</button>
+        <button class="pill" data-value="vegan">Vegan</button>
+        <button class="pill" data-value="gluten-free">Gluten-free</button>
+        <button class="pill" data-value="nut allergy">Nut allergy</button>
+        <button class="pill" data-value="shellfish allergy">Shellfish allergy</button>
+        <button class="pill" data-value="dairy-free">Dairy-free</button>
+        <button class="pill" data-value="halal">Halal</button>
+        <button class="pill" data-value="kosher">Kosher</button>
+      </div>
+      <div class="dietary-warning">
+        <strong>Important notice</strong>
+        This app flags potential dietary conflicts based on AI interpretation of menu text only.
+        It may not be complete or accurate. If you have a food allergy or serious dietary
+        requirement, you must always inform restaurant staff and confirm ingredients directly
+        with the kitchen. Never rely on this app alone.
+      </div>
+    </div>
+
+    <!-- Food Preferences -->
+    <div class="profile-section">
+      <div class="profile-section-title">Food Preferences</div>
+      <div class="pill-grid" id="preference-pills">
+        <button class="pill" data-value="seafood">Love seafood</button>
+        <button class="pill" data-value="spicy">Enjoy spicy food</button>
+        <button class="pill" data-value="red meat">Red meat</button>
+        <button class="pill" data-value="offal">Offal &amp; game</button>
+        <button class="pill" data-value="vegetarian dishes">Vegetarian dishes</button>
+        <button class="pill" data-value="mild food">Prefer mild flavours</button>
+      </div>
+      <br>
+      <label class="profile-label">A couple of dishes you particularly enjoy</label>
+      <textarea class="profile-textarea" id="pref-favourites"
+        placeholder="e.g. fish pie, chicken tikka masala, beef stew…"></textarea>
+      <p class="profile-hint">These help the app draw comparisons you'll actually recognise.</p>
+    </div>
+
+    <button class="profile-save-btn" onclick="saveProfile()">Save Profile</button>
+    <button class="profile-clear-btn" onclick="clearProfile()">Clear profile &amp; use defaults</button>
+
+  </div>
+</div>
+
+<!-- ══ IMAGE MODAL ══ -->
 <div id="image-modal">
   <div class="modal-inner">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -608,16 +1042,15 @@ line-height: 1.6;
 </div>
 
 <!-- ══ SETUP SCREEN ══ -->
-
 <div id="setup-screen">
-  <div class="tile-bg"></div>
   <div class="setup-card">
     <div style="font-size:36px; margin-bottom:16px;">🔑</div>
     <h2>One-time setup</h2>
     <p>Enter your OpenAI API key to get started. It's stored only on this device and never shared anywhere.<br><br>
     Get your key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a></p>
-    <input class="key-input" type="password" id="api-key-input" placeholder="sk-proj-..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
-    <button class="save-btn" onclick="saveApiKey()">Save & Continue</button>
+    <input class="key-input" type="password" id="api-key-input" placeholder="sk-proj-…"
+      autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+    <button class="save-btn" onclick="saveApiKey()">Save &amp; Continue</button>
     <p class="setup-hint">Your key is saved in your browser's local storage.<br>It stays on this device only.</p>
   </div>
 </div>
@@ -626,14 +1059,116 @@ line-height: 1.6;
   // ── CONFIG ──────────────────────────────────────────────────────────
   let API_KEY = localStorage.getItem('lacarta_api_key') || '';
   const imageCache = {};
+  let lastMenuText = ''; // stores translated text for recommendation call
+
+  // ── PROFILE ─────────────────────────────────────────────────────────
+  const LANG_NAMES = {
+    'en-GB': 'British English', 'en-US': 'American English', 'en-AU': 'Australian English',
+    'es': 'Spanish', 'fr': 'French', 'de': 'German', 'it': 'Italian',
+    'pt': 'Portuguese', 'nl': 'Dutch', 'ru': 'Russian', 'ja': 'Japanese', 'zh': 'Chinese'
+  };
+
+  function getProfile() {
+    try { return JSON.parse(localStorage.getItem('lacarta_profile')) || {}; }
+    catch(e) { return {}; }
+  }
+
+  function saveProfile() {
+    const dietary = [...document.querySelectorAll('#dietary-pills .pill.active')]
+      .map(p => p.dataset.value);
+    const preferences = [...document.querySelectorAll('#preference-pills .pill.active')]
+      .map(p => p.dataset.value);
+
+    const profile = {
+      language:    document.getElementById('pref-language').value,
+      nationality: document.getElementById('pref-nationality').value.trim(),
+      dietary,
+      preferences,
+      favourites:  document.getElementById('pref-favourites').value.trim()
+    };
+
+    localStorage.setItem('lacarta_profile', JSON.stringify(profile));
+    updateProfileIcon();
+    show('home-screen');
+  }
+
+  function clearProfile() {
+    localStorage.removeItem('lacarta_profile');
+    document.getElementById('pref-language').value = 'en-GB';
+    document.getElementById('pref-nationality').value = '';
+    document.getElementById('pref-favourites').value = '';
+    document.querySelectorAll('.pill.active').forEach(p => p.classList.remove('active'));
+    updateProfileIcon();
+  }
+
+  function loadProfileIntoForm() {
+    const p = getProfile();
+    if (p.language)     document.getElementById('pref-language').value = p.language;
+    if (p.nationality)  document.getElementById('pref-nationality').value = p.nationality;
+    if (p.favourites)   document.getElementById('pref-favourites').value = p.favourites;
+
+    document.querySelectorAll('#dietary-pills .pill').forEach(pill => {
+      pill.classList.toggle('active', (p.dietary || []).includes(pill.dataset.value));
+    });
+    document.querySelectorAll('#preference-pills .pill').forEach(pill => {
+      pill.classList.toggle('active', (p.preferences || []).includes(pill.dataset.value));
+    });
+  }
+
+  function updateProfileIcon() {
+    const p = getProfile();
+    const hasData = p.nationality || (p.dietary && p.dietary.length) ||
+                    (p.preferences && p.preferences.length) || p.favourites;
+    document.getElementById('profile-icon-btn').classList.toggle('has-profile', !!hasData);
+  }
+
+  function buildProfilePromptSection() {
+    const p = getProfile();
+    let lines = [];
+
+    if (p.language && p.language !== 'en-GB') {
+      lines.push(`Respond entirely in ${LANG_NAMES[p.language] || p.language}.`);
+    }
+    if (p.nationality) {
+      lines.push(`The user is ${p.nationality} — use food comparisons that would be familiar to someone from ${p.nationality}.`);
+    }
+    if (p.dietary && p.dietary.length) {
+      lines.push(`DIETARY REQUIREMENTS: The user has the following dietary requirements: ${p.dietary.join(', ')}. Flag any dish that conflicts with these requirements by adding ⚠️ immediately after the dish name.`);
+    }
+    if (p.preferences && p.preferences.length) {
+      lines.push(`The user enjoys: ${p.preferences.join(', ')}.`);
+    }
+    if (p.favourites) {
+      lines.push(`Dishes they particularly enjoy: ${p.favourites}.`);
+    }
+
+    return lines.length ? '\n\n' + lines.join('\n') : '';
+  }
+
+  function hasPreferences() {
+    const p = getProfile();
+    return !!(p.preferences && p.preferences.length) || !!p.favourites ||
+           !!(p.dietary && p.dietary.length) || !!p.nationality;
+  }
+
+  // ── PILL TOGGLES ────────────────────────────────────────────────────
+  document.querySelectorAll('.pill').forEach(pill => {
+    pill.addEventListener('click', () => pill.classList.toggle('active'));
+  });
 
   // ── STARTUP ─────────────────────────────────────────────────────────
   function init() {
+    updateProfileIcon();
     if (!API_KEY) {
       show('setup-screen');
     } else {
       show('home-screen');
     }
+  }
+
+  function showProfile() {
+    loadProfileIntoForm();
+    show('profile-screen');
   }
 
   function saveApiKey() {
@@ -655,7 +1190,7 @@ line-height: 1.6;
 
   // ── NAVIGATION ──────────────────────────────────────────────────────
   function show(id) {
-    ['home-screen','loading-screen','result-screen','setup-screen'].forEach(s => {
+    ['home-screen','loading-screen','result-screen','profile-screen','setup-screen'].forEach(s => {
       document.getElementById(s).style.display = 'none';
     });
     document.getElementById(id).style.display = 'flex';
@@ -663,22 +1198,21 @@ line-height: 1.6;
 
   function goHome() {
     document.getElementById('file-input').value = '';
+    lastMenuText = '';
     show('home-screen');
   }
 
-  // Run on load
   init();
 
   // ── PHOTO HANDLING ───────────────────────────────────────────────────
   async function handlePhoto(input) {
     if (!input.files || !input.files[0]) return;
     const file = input.files[0];
-
     show('loading-screen');
-
     try {
       const base64 = await fileToBase64(file);
       const menuText = await analyseMenu(base64);
+      lastMenuText = menuText;
       renderResult(menuText);
       show('result-screen');
     } catch (err) {
@@ -705,8 +1239,7 @@ line-height: 1.6;
           const canvas = document.createElement('canvas');
           canvas.width = w; canvas.height = h;
           canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-          resolve(dataUrl.split(',')[1]);
+          resolve(canvas.toDataURL('image/jpeg', 0.85).split(',')[1]);
         };
         img.src = e.target.result;
       };
@@ -716,6 +1249,20 @@ line-height: 1.6;
 
   // ── ANALYSE MENU ─────────────────────────────────────────────────────
   async function analyseMenu(base64Image) {
+    const profileSection = buildProfilePromptSection();
+
+    const prompt = `You are a menu translation and explanation assistant for travellers.
+
+First, automatically detect the language of the menu (it may be Spanish, Catalan, Italian, French, Portuguese, or any other language).
+
+Take the menu in this image and provide a clear breakdown of what it shows. Look for extra information (for example lines separating different courses, is it a choice of starter or are all included, is dessert included, drinks, etc.) Where appropriate, separate starters and other courses.
+
+Give an English translation next to each dish and a one-sentence factual description for each dish, written for someone new to the country who wants to know exactly what they are ordering. Focus on ingredients, cooking method, how it appears, and comparisons to familiar dishes that would help the reader visualise and understand the dish.
+
+If the menu is anything other than straightforward, start with a one-sentence explanation of how the menu works.
+
+Format dish names in bold using **dish name** markdown syntax.${profileSection}`;
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -723,30 +1270,11 @@ line-height: 1.6;
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{
-          role: "user",
-          content: [
-            {
-              type: "image_url",
-              image_url: { url: `data:image/jpeg;base64,${base64Image}` }
-            },
-            {
-              type: "text",
-              text: `You are a menu translation and explanation assistant for English-speaking travellers.
-
-First, automatically detect the language of the menu (it may be Spanish, Catalan, Italian, French, Portuguese, or any other language).
-
-Take the menu in this image and provide a clear breakdown of what it shows. Look for extra information (for example lines separating different courses, is it a choice of starter or are all included, is dessert included, drinks, etc.) Where appropriate, separate starters and other courses.
-
-Give an English translation next to each dish and a one-sentence factual description in English for each dish, written for a British person new to the country who wants to know exactly what they are ordering. Focus on ingredients, cooking method, how it appears, whether there are comparable British dishes that would help a British person visualise the dish and how it might taste.
-
-If the menu is anything other than straightforward, start with a one-sentence explanation of how the menu works.
-
-Format dish names in bold using **dish name** markdown syntax.`
-            }
-          ]
-        }],
+        model: "gpt-4o",
+        messages: [{ role: "user", content: [
+          { type: "image_url", image_url: { url: `data:image/jpeg;base64,${base64Image}` } },
+          { type: "text", text: prompt }
+        ]}],
         max_tokens: 2000
       })
     });
@@ -756,8 +1284,7 @@ Format dish names in bold using **dish name** markdown syntax.`
       throw new Error(err.error?.message || `API error ${response.status}`);
     }
 
-    const data = await response.json();
-    return data.choices[0].message.content;
+    return (await response.json()).choices[0].message.content;
   }
 
   // ── RENDER RESULT ────────────────────────────────────────────────────
@@ -791,6 +1318,28 @@ Format dish names in bold using **dish name** markdown syntax.`
       }
     }
 
+    // Add allergen notice at top if dietary requirements are set
+    const p = getProfile();
+    if (p.dietary && p.dietary.length) {
+      html = `<div class="results-allergen-notice">
+        <strong>⚠️ Allergen &amp; dietary information</strong>
+        Flags in these results are based on AI interpretation of menu text only and may not be
+        complete or accurate. Always inform restaurant staff of your requirements and confirm
+        ingredients directly with the kitchen. Do not rely on this app alone.
+      </div>` + html;
+    }
+
+    // Add recommendation button if profile has preferences
+    if (hasPreferences()) {
+      html += `
+        <div class="recommend-wrap">
+          <button class="recommend-btn" id="recommend-btn" onclick="getRecommendation()">
+            ✦ &nbsp;Recommend something for me
+          </button>
+          <div id="recommend-card"></div>
+        </div>`;
+    }
+
     document.getElementById('result-body').innerHTML = html;
   }
 
@@ -798,12 +1347,70 @@ Format dish names in bold using **dish name** markdown syntax.`
     return name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
   }
 
+  // ── RECOMMENDATION ───────────────────────────────────────────────────
+  async function getRecommendation() {
+    const btn  = document.getElementById('recommend-btn');
+    const card = document.getElementById('recommend-card');
+    if (!btn || !card) return;
+
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    card.innerHTML = '<div class="recommend-spinner"></div>';
+
+    try {
+      const p = getProfile();
+      let profileDesc = [];
+      if (p.nationality)                         profileDesc.push(`They are ${p.nationality}.`);
+      if (p.dietary && p.dietary.length)         profileDesc.push(`Dietary requirements: ${p.dietary.join(', ')}.`);
+      if (p.preferences && p.preferences.length) profileDesc.push(`They enjoy: ${p.preferences.join(', ')}.`);
+      if (p.favourites)                          profileDesc.push(`Favourite dishes: ${p.favourites}.`);
+
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "gpt-4o",
+          messages: [{ role: "user", content:
+            `Here is a translated menu:\n\n${lastMenuText}\n\n` +
+            `About this person: ${profileDesc.join(' ')}\n\n` +
+            `Based on their tastes, suggest one or two dishes from this menu in a warm, natural way — ` +
+            `as a knowledgeable friend would, not as an algorithm. Start with "Based on..." and name ` +
+            `the specific dish. Give a brief honest reason why it suits them. If there is a clear second ` +
+            `option, mention it. Keep it to 2-3 sentences. Do not be effusive. Phrase it as a lean, not ` +
+            `a certainty. Avoid words like "perfect" or "amazing".`
+          }],
+          max_tokens: 200
+        })
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error?.message || `API error ${response.status}`);
+      }
+
+      const text = (await response.json()).choices[0].message.content;
+      card.innerHTML = `
+        <div class="recommend-card">
+          <div class="recommend-card-label">For you</div>
+          <div class="recommend-card-text">${text}</div>
+        </div>`;
+      btn.style.display = 'none';
+
+    } catch (err) {
+      card.innerHTML = `<div class="error-box"><strong>Couldn't get a recommendation</strong>${err.message}</div>`;
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+  }
+
   // ── DISH IMAGE MODAL ─────────────────────────────────────────────────
   async function showDishImage(dishName) {
-    const modal = document.getElementById('image-modal');
+    const modal   = document.getElementById('image-modal');
     const content = document.getElementById('modal-content');
 
-    // Show loading state
     content.innerHTML = `
       <div class="modal-loading">
         <div class="modal-spinner"></div>
@@ -812,23 +1419,14 @@ Format dish names in bold using **dish name** markdown syntax.`
     modal.classList.add('visible');
 
     try {
-      let imgSrc;
-
-      if (imageCache[dishName]) {
-        imgSrc = imageCache[dishName];
-      } else {
-        imgSrc = await generateDishImage(dishName);
-        imageCache[dishName] = imgSrc;
-      }
-
+      let imgSrc = imageCache[dishName] || await generateDishImage(dishName);
+      imageCache[dishName] = imgSrc;
       content.innerHTML = `
         <img class="modal-img" src="${imgSrc}" alt="${dishName}">
         <p class="modal-label">${dishName}</p>`;
     } catch (err) {
       content.innerHTML = `
-        <div class="error-box" style="color:#fff0ee; background:rgba(200,71,46,0.3); border-color:rgba(200,71,46,0.4);">
-          <strong>Couldn't load image</strong>${err.message}
-        </div>`;
+        <div class="error-box"><strong>Couldn't load image</strong>${err.message}</div>`;
     }
   }
 
@@ -840,8 +1438,8 @@ Format dish names in bold using **dish name** markdown syntax.`
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "dall-e-3",
-        prompt: `A realistic food photography image of ${dishName}, served on a white plate, natural lighting, restaurant quality presentation, overhead or 45-degree angle shot`,
+        model: "gpt-image-1",
+        prompt: `A realistic food photograph of ${dishName} as it would typically be served in a casual everyday Mediterranean restaurant. Simple, honest plating on a plain ceramic plate. Natural light. Not fine dining, not styled — just good, honest food as a tourist would actually receive it.`,
         n: 1,
         size: "1024x1024"
       })
@@ -852,15 +1450,13 @@ Format dish names in bold using **dish name** markdown syntax.`
       throw new Error(err.error?.message || `Image API error ${response.status}`);
     }
 
-    const data = await response.json();
-    return data.data[0].url;
+    return `data:image/png;base64,${(await response.json()).data[0].b64_json}`;
   }
 
   function closeModal() {
     document.getElementById('image-modal').classList.remove('visible');
   }
 
-  // Close modal on backdrop tap
   document.getElementById('image-modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
