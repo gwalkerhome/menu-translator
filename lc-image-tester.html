@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v2 La Carta — Image Source Tester</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #1a1a2e; color: #e0d8c8; min-height: 100vh; padding: 20px; }
+
+    h1 { text-align: center; margin-bottom: 20px; color: #d4a850; font-size: 1.4rem; letter-spacing: 0.05em; }
+
+    /* Keys section */
+    .keys-section { background: #252540; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+    .keys-section summary { cursor: pointer; font-weight: bold; color: #d4a850; user-select: none; }
+    .keys-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; margin-top: 14px; }
+    .key-group { display: flex; flex-direction: column; gap: 4px; }
+    .key-group label { font-size: 0.75rem; color: #a09070; }
+    .key-group input { padding: 8px; border: 1px solid #444; border-radius: 6px; background: #1a1a2e; color: #e0d8c8; font-size: 0.85rem; }
+    .key-group input:focus { outline: none; border-color: #d4a850; }
+    .save-row { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+    .save-btn { padding: 8px 22px; background: #d4a850; color: #1a1a2e; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+    .save-btn:hover { background: #e8be60; }
+    #save-confirm { font-size: 0.82rem; color: #4caf50; display: none; }
+
+    /* Search bar */
+    .search-section { display: flex; gap: 10px; margin-bottom: 22px; }
+    .search-section input { flex: 1; padding: 13px 16px; border: 2px solid #d4a850; border-radius: 8px; background: #252540; color: #e0d8c8; font-size: 1rem; }
+    .search-section input:focus { outline: none; border-color: #e8be60; }
+    .search-section button { padding: 13px 26px; background: #d4a850; color: #1a1a2e; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; white-space: nowrap; }
+    .search-section button:hover { background: #e8be60; }
+
+    /* Panel grid */
+    .panels-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 960px) { .panels-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .panels-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: #252540; border-radius: 10px; padding: 14px; border: 1px solid #333; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .panel-title { font-weight: bold; color: #d4a850; font-size: 0.9rem; }
+    .panel-badge { font-size: 0.68rem; padding: 2px 9px; border-radius: 10px; background: #333; color: #777; }
+    .panel-badge.active { background: #1b3d1b; color: #5ecf62; }
+    .panel-badge.nokey { background: #3d1b1b; color: #cf6060; }
+
+    .panel-status { font-size: 0.78rem; color: #777; margin-bottom: 10px; min-height: 18px; }
+    .panel-status.error { color: #cf6679; }
+    .panel-status.loading { color: #d4a850; }
+    .panel-status.done { color: #5ecf62; }
+
+    .panel-translation { font-size: 0.83rem; line-height: 1.55; color: #b8b0a0; margin-bottom: 12px; min-height: 64px; }
+    .panel-translation strong { color: #e0d8c8; display: block; margin-bottom: 5px; font-size: 0.9rem; }
+    .panel-translation .empty { color: #444; font-style: italic; }
+
+    .panel-image { width: 100%; aspect-ratio: 4 / 3; border-radius: 8px; background: #1a1a2e; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .panel-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+    .panel-image .placeholder { color: #444; font-size: 0.8rem; text-align: center; padding: 12px; line-height: 1.5; }
+    .panel-image .placeholder.err { color: #8a4040; }
+
+    .panel-cost { font-size: 0.68rem; color: #555; margin-top: 9px; text-align: right; }
+
+    /* Reserved panel */
+    .panel.reserved { opacity: 0.35; border-style: dashed; border-color: #555; }
+    .panel.reserved .panel-title { color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>🍽️ La Carta — Image Source Tester</h1>
+
+<!-- API Keys -->
+<details class="keys-section" open>
+  <summary>🔑 API Keys — click to expand / collapse (saved to your browser)</summary>
+  <div class="keys-grid">
+    <div class="key-group">
+      <label>OpenAI API Key — used for translation in panels 1, 2, 3, 5</label>
+      <input type="password" id="key-openai" placeholder="sk-...">
+    </div>
+    <div class="key-group">
+      <label>Google Custom Search API Key — panel 1</label>
+      <input type="password" id="key-google" placeholder="AIza...">
+    </div>
+    <div class="key-group">
+      <label>Google Search Engine ID (cx) — panel 1</label>
+      <input type="text" id="key-google-cx" placeholder="017abc...">
+    </div>
+    <div class="key-group">
+      <label>Pexels API Key — panel 2</label>
+      <input type="password" id="key-pexels" placeholder="...">
+    </div>
+    <div class="key-group">
+      <label>Stability AI API Key — panel 3</label>
+      <input type="password" id="key-stability" placeholder="sk-...">
+    </div>
+    <div class="key-group">
+      <label>Gemini API Key — panel 4 (translates + generates image)</label>
+      <input type="password" id="key-gemini" placeholder="AIza...">
+    </div>
+  </div>
+  <div class="save-row">
+    <button class="save-btn" onclick="saveKeys()">Save Keys</button>
+    <span id="save-confirm">✓ Saved to browser</span>
+  </div>
+</details>
+
+<!-- Meal input -->
+<div class="search-section">
+  <input type="text" id="meal-input"
+    placeholder="Type a dish name in any language… e.g. Paella, Wiener Schnitzel, 拉面, Бефстроганов"
+    onkeydown="if(event.key==='Enter') runAll()">
+  <button onclick="runAll()">▶ Test All</button>
+</div>
+
+<!-- Six panels -->
+<div class="panels-grid">
+
+  <!-- Panel 1: Google Image Search -->
+  <div class="panel" id="panel-1">
+    <div class="panel-header">
+      <span class="panel-title">1. Google Image Search</span>
+      <span class="panel-badge" id="badge-1">checking…</span>
+    </div>
+    <div class="panel-status" id="status-1">Waiting</div>
+    <div class="panel-translation" id="translation-1"><span class="empty">Translation will appear here</span></div>
+    <div class="panel-image" id="image-1"><div class="placeholder">Image will appear here</div></div>
+    <div class="panel-cost">~$0.005 / search · 100 free/day</div>
+  </div>
+
+  <!-- Panel 2: Pexels -->
+  <div class="panel" id="panel-2">
+    <div class="panel-header">
+      <span class="panel-title">2. Pexels Stock Photo</span>
+      <span class="panel-badge" id="badge-2">checking…</span>
+    </div>
+    <div class="panel-status" id="status-2">Waiting</div>
+    <div class="panel-translation" id="translation-2"><span class="empty">Translation will appear here</span></div>
+    <div class="panel-image" id="image-2"><div class="placeholder">Image will appear here</div></div>
+    <div class="panel-cost">Free · 20,000 req/month · licensed photos</div>
+  </div>
+
+  <!-- Panel 3: Stability AI -->
+  <div class="panel" id="panel-3">
+    <div class="panel-header">
+      <span class="panel-title">3. Stability AI (generated)</span>
+      <span class="panel-badge" id="badge-3">checking…</span>
+    </div>
+    <div class="panel-status" id="status-3">Waiting</div>
+    <div class="panel-translation" id="translation-3"><span class="empty">Translation will appear here</span></div>
+    <div class="panel-image" id="image-3"><div class="placeholder">Image will appear here</div></div>
+    <div class="panel-cost">~£0.01 / image</div>
+  </div>
+
+  <!-- Panel 4: Gemini -->
+  <div class="panel" id="panel-4">
+    <div class="panel-header">
+      <span class="panel-title">4. Gemini Flash (translate + generate)</span>
+      <span class="panel-badge" id="badge-4">checking…</span>
+    </div>
+    <div class="panel-status" id="status-4">Waiting</div>
+    <div class="panel-translation" id="translation-4"><span class="empty">Translation will appear here</span></div>
+    <div class="panel-image" id="image-4"><div class="placeholder">Image will appear here</div></div>
+    <div class="panel-cost">gemini-2.5-flash-image · low cost</div>
+  </div>
+
+  <!-- Panel 5: gpt-image-1 -->
+  <div class="panel" id="panel-5">
+    <div class="panel-header">
+      <span class="panel-title">5. gpt-image-1 (current app)</span>
+      <span class="panel-badge" id="badge-5">checking…</span>
+    </div>
+    <div class="panel-status" id="status-5">Waiting</div>
+    <div class="panel-translation" id="translation-5"><span class="empty">Translation will appear here</span></div>
+    <div class="panel-image" id="image-5"><div class="placeholder">Image will appear here</div></div>
+    <div class="panel-cost">~$0.04–0.08 / image · benchmark</div>
+  </div>
+
+  <!-- Panel 6: Reserved -->
+  <div class="panel reserved" id="panel-6">
+    <div class="panel-header">
+      <span class="panel-title">6. Reserved</span>
+      <span class="panel-badge">TBD</span>
+    </div>
+    <div class="panel-status">Free slot for a future option</div>
+    <div class="panel-translation"><span class="empty">—</span></div>
+    <div class="panel-image"><div class="placeholder">Reserved for future testing</div></div>
+    <div class="panel-cost"></div>
+  </div>
+
+</div><!-- /panels-grid -->
+
+<script>
+// ─── Key storage ────────────────────────────────────────────────────────────
+const KEY_IDS = ['openai', 'google', 'google-cx', 'pexels', 'stability', 'gemini'];
+
+function loadKeys() {
+  KEY_IDS.forEach(k => {
+    const el = document.getElementById('key-' + k);
+    const val = localStorage.getItem('lc_test_' + k);
+    if (el && val) el.value = val;
+  });
+  updateBadges();
+}
+
+function saveKeys() {
+  KEY_IDS.forEach(k => {
+    const el = document.getElementById('key-' + k);
+    if (el) localStorage.setItem('lc_test_' + k, el.value.trim());
+  });
+  updateBadges();
+  const el = document.getElementById('save-confirm');
+  el.style.display = 'inline';
+  setTimeout(() => el.style.display = 'none', 2500);
+}
+
+function getKey(name) {
+  return localStorage.getItem('lc_test_' + name) || '';
+}
+
+function updateBadges() {
+  const hasKey = [
+    !!(getKey('google') && getKey('google-cx')), // panel 1
+    !!getKey('pexels'),                           // panel 2
+    !!getKey('stability'),                        // panel 3
+    !!getKey('gemini'),                           // panel 4
+    !!getKey('openai'),                           // panel 5
+  ];
+  hasKey.forEach((ok, i) => {
+    const badge = document.getElementById('badge-' + (i + 1));
+    if (!badge) return;
+    badge.textContent = ok ? 'Key ✓' : 'No key';
+    badge.className = 'panel-badge ' + (ok ? 'active' : 'nokey');
+  });
+}
+
+// ─── UI helpers ─────────────────────────────────────────────────────────────
+function setStatus(n, msg, cls = '') {
+  const el = document.getElementById('status-' + n);
+  el.textContent = msg;
+  el.className = 'panel-status ' + cls;
+}
+
+function setTranslation(n, info) {
+  document.getElementById('translation-' + n).innerHTML =
+    `<strong>${info.englishName}</strong>${info.description}`;
+}
+
+function setImage(n, src) {
+  document.getElementById('image-' + n).innerHTML =
+    `<img src="${src}" alt="dish photo"
+      onerror="this.parentElement.innerHTML='<div class=\\'placeholder err\\'>Image failed to load</div>'">`;
+}
+
+function setImageError(n, msg) {
+  document.getElementById('image-' + n).innerHTML =
+    `<div class="placeholder err">${msg}</div>`;
+}
+
+function resetPanels() {
+  for (let i = 1; i <= 5; i++) {
+    setStatus(i, 'Starting…', 'loading');
+    document.getElementById('translation-' + i).innerHTML = '<span class="empty">Loading…</span>';
+    document.getElementById('image-' + i).innerHTML = '<div class="placeholder">Loading…</div>';
+  }
+}
+
+// ─── Translation: GPT-4o ────────────────────────────────────────────────────
+async function translateGPT(meal) {
+  const key = getKey('openai');
+  if (!key) throw new Error('No OpenAI key');
+
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [{
+        role: 'user',
+        content: `You are a friendly food guide. A tourist photographed a menu item: "${meal}".
+Return a JSON object with exactly these fields:
+- englishName: the dish name in English
+- description: 2–3 warm sentences about the dish — what it is, its origins, what it tastes like
+- imagePrompt: a short English prompt for generating an appetising food photo of this dish, e.g. "A steaming bowl of Japanese ramen with pork belly, soft-boiled egg, nori and spring onions on a rustic wooden table, professional food photography"`
+      }],
+      max_tokens: 400
+    })
+  });
+  if (!res.ok) throw new Error('OpenAI error ' + res.status);
+  const data = await res.json();
+  return JSON.parse(data.choices[0].message.content);
+}
+
+// ─── Translation: Gemini ────────────────────────────────────────────────────
+async function translateGemini(meal) {
+  const key = getKey('gemini');
+  if (!key) throw new Error('No Gemini key');
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text:
+          `You are a friendly food guide. A tourist photographed a menu item: "${meal}".
+Return a JSON object (no markdown, no code blocks, just raw JSON) with exactly these fields:
+- englishName: the dish name in English
+- description: 2–3 warm sentences about the dish — what it is, its origins, what it tastes like
+- imagePrompt: a short English prompt for generating an appetising food photo of this dish`
+        }] }],
+        generationConfig: { maxOutputTokens: 400 }
+      })
+    }
+  );
+  if (!res.ok) throw new Error('Gemini translate error ' + res.status);
+  const data = await res.json();
+  let text = data.candidates[0].content.parts[0].text.trim();
+  text = text.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+  return JSON.parse(text);
+}
+
+// ─── Panel runners ───────────────────────────────────────────────────────────
+
+// Panel 1 — Google Custom Search
+async function runPanel1(meal) {
+  if (!getKey('openai'))    { setStatus(1, 'No OpenAI key for translation', 'error'); return; }
+  if (!getKey('google'))    { setStatus(1, 'No Google API key set', 'error'); return; }
+  if (!getKey('google-cx')) { setStatus(1, 'No Google Search Engine ID set', 'error'); return; }
+  try {
+    setStatus(1, 'Translating…', 'loading');
+    const info = await translateGPT(meal);
+    setTranslation(1, info);
+
+    setStatus(1, 'Searching Google Images…', 'loading');
+    const q = encodeURIComponent(info.englishName + ' food dish');
+    const url = `https://www.googleapis.com/customsearch/v1?key=${getKey('google')}&cx=${getKey('google-cx')}&searchType=image&q=${q}&num=1&imgType=photo&safe=active`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Google error ' + res.status);
+    const data = await res.json();
+
+    if (data.items && data.items[0]) {
+      setImage(1, data.items[0].link);
+      setStatus(1, 'Done ✓', 'done');
+    } else {
+      setImageError(1, 'No images found for this dish');
+      setStatus(1, 'No results', 'error');
+    }
+  } catch(e) {
+    setStatus(1, 'Error: ' + e.message, 'error');
+    setImageError(1, e.message);
+  }
+}
+
+// Panel 2 — Pexels
+async function runPanel2(meal) {
+  if (!getKey('openai')) { setStatus(2, 'No OpenAI key for translation', 'error'); return; }
+  if (!getKey('pexels')) { setStatus(2, 'No Pexels key set', 'error'); return; }
+  try {
+    setStatus(2, 'Translating…', 'loading');
+    const info = await translateGPT(meal);
+    setTranslation(2, info);
+
+    setStatus(2, 'Searching Pexels…', 'loading');
+    const q = encodeURIComponent(info.englishName + ' food');
+    const res = await fetch(`https://api.pexels.com/v1/search?query=${q}&per_page=1&orientation=landscape`, {
+      headers: { 'Authorization': getKey('pexels') }
+    });
+    if (!res.ok) throw new Error('Pexels error ' + res.status);
+    const data = await res.json();
+
+    if (data.photos && data.photos[0]) {
+      setImage(2, data.photos[0].src.large);
+      setStatus(2, 'Done ✓', 'done');
+    } else {
+      setImageError(2, 'No photos found for this dish on Pexels');
+      setStatus(2, 'No results', 'error');
+    }
+  } catch(e) {
+    setStatus(2, 'Error: ' + e.message, 'error');
+    setImageError(2, e.message);
+  }
+}
+
+// Panel 3 — Stability AI
+async function runPanel3(meal) {
+  if (!getKey('openai'))    { setStatus(3, 'No OpenAI key for translation', 'error'); return; }
+  if (!getKey('stability')) { setStatus(3, 'No Stability AI key set', 'error'); return; }
+  try {
+    setStatus(3, 'Translating…', 'loading');
+    const info = await translateGPT(meal);
+    setTranslation(3, info);
+
+    setStatus(3, 'Generating image (Stability AI)…', 'loading');
+    const form = new FormData();
+    form.append('prompt', info.imagePrompt);
+    form.append('output_format', 'jpeg');
+    form.append('aspect_ratio', '4:3');
+
+    const res = await fetch('https://api.stability.ai/v2beta/stable-image/generate/core', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + getKey('stability'),
+        'Accept': 'image/*'
+      },
+      body: form
+    });
+
+    if (!res.ok) {
+      const msg = await res.text();
+      throw new Error('Stability error ' + res.status + ' — ' + msg.substring(0, 120));
+    }
+    const blob = await res.blob();
+    setImage(3, URL.createObjectURL(blob));
+    setStatus(3, 'Done ✓', 'done');
+  } catch(e) {
+    setStatus(3, 'Error: ' + e.message, 'error');
+    setImageError(3, 'Note: Stability AI may block browser requests (CORS). A proxy may be needed.');
+  }
+}
+
+// Panel 4 — Gemini Flash image generation (free tier compatible)
+async function runPanel4(meal) {
+  if (!getKey('gemini')) { setStatus(4, 'No Gemini key set', 'error'); return; }
+  try {
+    setStatus(4, 'Translating with Gemini…', 'loading');
+    const info = await translateGemini(meal);
+    setTranslation(4, info);
+
+    setStatus(4, 'Generating image (Gemini Flash)…', 'loading');
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${getKey('gemini')}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: 'Generate a food photograph: ' + info.imagePrompt }]
+          }]
+        })
+      }
+    );
+
+    if (!res.ok) {
+      const msg = await res.text();
+      throw new Error('Gemini image error ' + res.status + ' — ' + msg.substring(0, 150));
+    }
+
+    const data = await res.json();
+    // Find the image part in the response
+    const parts = data.candidates[0].content.parts;
+    const imagePart = parts.find(p => p.inlineData);
+    if (!imagePart) throw new Error('No image returned by Gemini');
+
+    const mime = imagePart.inlineData.mimeType || 'image/jpeg';
+    const b64  = imagePart.inlineData.data;
+    setImage(4, `data:${mime};base64,${b64}`);
+    setStatus(4, 'Done ✓', 'done');
+
+  } catch(e) {
+    setStatus(4, 'Error: ' + e.message, 'error');
+    setImageError(4, e.message);
+  }
+}
+
+// Panel 5 — gpt-image-1 (current app approach)
+async function runPanel5(meal) {
+  if (!getKey('openai')) { setStatus(5, 'No OpenAI key set', 'error'); return; }
+  try {
+    setStatus(5, 'Translating with GPT-4o…', 'loading');
+    const info = await translateGPT(meal);
+    setTranslation(5, info);
+
+    setStatus(5, 'Generating image (gpt-image-1)…', 'loading');
+    const res = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getKey('openai') },
+      body: JSON.stringify({
+        model: 'gpt-image-1',
+        prompt: info.imagePrompt,
+        n: 1,
+        size: '1024x1024'
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'OpenAI image error ' + res.status);
+    }
+    const data = await res.json();
+    setImage(5, 'data:image/png;base64,' + data.data[0].b64_json);
+    setStatus(5, 'Done ✓', 'done');
+  } catch(e) {
+    setStatus(5, 'Error: ' + e.message, 'error');
+    setImageError(5, e.message);
+  }
+}
+
+// ─── Run all ────────────────────────────────────────────────────────────────
+function runAll() {
+  const meal = document.getElementById('meal-input').value.trim();
+  if (!meal) { alert('Please type a dish name first'); return; }
+  resetPanels();
+  runPanel1(meal);
+  runPanel2(meal);
+  runPanel3(meal);
+  runPanel4(meal);
+  runPanel5(meal);
+}
+
+// ─── Init ───────────────────────────────────────────────────────────────────
+loadKeys();
+</script>
+
+</body>
+</html>

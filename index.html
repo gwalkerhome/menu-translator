@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="La Carta">
 <link rel="apple-touch-icon" href="icon.png">
 
-<title>v3 La Carta</title>
+<title>v4 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -72,9 +72,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    padding: 48px 24px;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding: 28px 24px;
     position: relative;
     overflow: hidden;
   }
@@ -129,7 +130,7 @@
     align-items: center;
     justify-content: center;
     gap: 14px;
-    margin-bottom: 44px;
+    margin-bottom: clamp(16px, 3vh, 36px);
     color: var(--gold-soft);
     font-size: 12px;
     letter-spacing: 4px;
@@ -152,15 +153,15 @@
   }
 
   .brand-mark {
-    width: 84px;
-    height: 84px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     border: 1.5px solid rgba(212,168,67,0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
-    margin: 0 auto 28px;
+    font-size: 34px;
+    margin: 0 auto clamp(14px, 2.5vh, 26px);
     position: relative;
     box-shadow: 0 0 40px rgba(212,168,67,0.12), inset 0 0 24px rgba(212,168,67,0.06);
   }
@@ -175,12 +176,12 @@
 
   h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(54px, 14vw, 74px);
+    font-size: clamp(48px, 13vw, 70px);
     font-weight: 700;
     letter-spacing: -1px;
     color: var(--cream);
     line-height: 1;
-    margin-bottom: 22px;
+    margin-bottom: clamp(12px, 2vh, 20px);
   }
 
   .ornament-divider {
@@ -188,7 +189,7 @@
     align-items: center;
     justify-content: center;
     gap: 16px;
-    margin: 0 auto 22px;
+    margin: 0 auto clamp(10px, 2vh, 18px);
     color: var(--gold);
     font-size: 10px;
   }
@@ -210,11 +211,11 @@
   .tagline {
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    font-size: clamp(15px, 4vw, 19px);
+    font-size: clamp(14px, 3.8vw, 18px);
     color: var(--cream-soft);
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     font-weight: 400;
-    line-height: 1.65;
+    line-height: 1.6;
   }
 
   .byline {
@@ -223,7 +224,7 @@
     font-size: 12px;
     color: var(--muted);
     letter-spacing: 0.5px;
-    margin-bottom: 56px;
+    margin-bottom: clamp(24px, 4.5vh, 48px);
   }
 
   .capture-btn {
@@ -234,7 +235,7 @@
     width: 100%;
     max-width: 320px;
     margin: 0 auto;
-    padding: 22px 28px;
+    padding: 18px 28px;
     background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 55%, var(--terracotta-dark) 100%);
     color: var(--cream);
     border: none;
@@ -271,28 +272,12 @@
   #file-input { display: none; }
 
   .hint {
-    margin-top: 22px;
+    margin-top: clamp(12px, 2vh, 20px);
     font-size: 11px;
     color: var(--muted);
     letter-spacing: 1.5px;
     text-transform: uppercase;
   }
-
-  .reset-link {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 11px;
-    font-family: 'Lato', sans-serif;
-    cursor: pointer;
-    text-decoration: underline;
-    margin-top: 28px;
-    display: block;
-    opacity: 0.55;
-    transition: opacity 0.2s;
-  }
-
-  .reset-link:hover { opacity: 1; }
 
   .ornament-bottom {
     position: absolute;
@@ -817,77 +802,6 @@
 
   .modal-loading p { color: rgba(245,237,216,0.45); font-size: 14px; }
 
-  /* ── SETUP SCREEN ── */
-  #setup-screen {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    padding: 40px 24px;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-    animation: fadeUp 0.7s ease both;
-  }
-
-  .setup-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(212,168,67,0.2);
-    border-radius: 20px;
-    padding: 36px 28px;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: var(--shadow-lg);
-  }
-
-  .setup-card h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--cream);
-    margin-bottom: 10px;
-  }
-
-  .setup-card p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
-  .setup-card a { color: var(--gold); text-decoration: none; }
-
-  .key-input {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid rgba(212,168,67,0.25);
-    border-radius: 12px;
-    font-family: 'Lato', sans-serif;
-    font-size: 14px;
-    color: var(--cream);
-    background: rgba(255,255,255,0.05);
-    margin-bottom: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .key-input:focus { border-color: var(--gold); }
-  .key-input::placeholder { color: var(--muted); }
-
-  .save-btn {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
-    color: var(--cream);
-    border: none;
-    border-radius: 12px;
-    font-family: 'Lato', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(200,71,46,0.4);
-    transition: opacity 0.15s;
-  }
-
-  .save-btn:active { opacity: 0.85; }
-  .setup-hint { margin-top: 16px; font-size: 12px; color: var(--muted); line-height: 1.6; }
-
   /* ── ERROR ── */
   .error-box {
     background: rgba(200,71,46,0.14);
@@ -926,7 +840,6 @@
 
     <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handlePhoto(this)">
     <p class="hint">Any language &middot; Any cuisine &middot; Instant translation</p>
-    <button onclick="resetApiKey()" class="reset-link">Change API key</button>
   </div>
 
   <div class="ornament-bottom">✦</div>
@@ -1027,6 +940,19 @@
       <p class="profile-hint">These help the app draw comparisons you'll actually recognise.</p>
     </div>
 
+    <!-- Dish Images -->
+    <div class="profile-section">
+      <div class="profile-section-title">Dish Images</div>
+      <p class="profile-hint" style="margin-bottom: 14px;">
+        Standard uses free stock photos — good quality, no extra cost.<br>
+        Beautiful uses AI generation — stunning but costs a little more per image.
+      </p>
+      <div class="pill-grid">
+        <button class="pill image-mode-pill active" data-mode="pexels" onclick="setImageMode('pexels')">Standard (free)</button>
+        <button class="pill image-mode-pill" data-mode="openai" onclick="setImageMode('openai')">✦ Beautiful (AI)</button>
+      </div>
+    </div>
+
     <button class="profile-save-btn" onclick="saveProfile()">Save Profile</button>
     <button class="profile-clear-btn" onclick="clearProfile()">Clear profile &amp; use defaults</button>
 
@@ -1041,25 +967,10 @@
   </div>
 </div>
 
-<!-- ══ SETUP SCREEN ══ -->
-<div id="setup-screen">
-  <div class="setup-card">
-    <div style="font-size:36px; margin-bottom:16px;">🔑</div>
-    <h2>One-time setup</h2>
-    <p>Enter your OpenAI API key to get started. It's stored only on this device and never shared anywhere.<br><br>
-    Get your key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a></p>
-    <input class="key-input" type="password" id="api-key-input" placeholder="sk-proj-…"
-      autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
-    <button class="save-btn" onclick="saveApiKey()">Save &amp; Continue</button>
-    <p class="setup-hint">Your key is saved in your browser's local storage.<br>It stays on this device only.</p>
-  </div>
-</div>
-
 <script>
   // ── CONFIG ──────────────────────────────────────────────────────────
-  let API_KEY = localStorage.getItem('lacarta_api_key') || '';
   const imageCache = {};
-  let lastMenuText = ''; // stores translated text for recommendation call
+  let lastMenuText = '';
 
   // ── PROFILE ─────────────────────────────────────────────────────────
   const LANG_NAMES = {
@@ -1073,18 +984,26 @@
     catch(e) { return {}; }
   }
 
+  function setImageMode(mode) {
+    document.querySelectorAll('.image-mode-pill').forEach(p => {
+      p.classList.toggle('active', p.dataset.mode === mode);
+    });
+  }
+
   function saveProfile() {
     const dietary = [...document.querySelectorAll('#dietary-pills .pill.active')]
       .map(p => p.dataset.value);
     const preferences = [...document.querySelectorAll('#preference-pills .pill.active')]
       .map(p => p.dataset.value);
+    const imageModeEl = document.querySelector('.image-mode-pill.active');
 
     const profile = {
       language:    document.getElementById('pref-language').value,
       nationality: document.getElementById('pref-nationality').value.trim(),
       dietary,
       preferences,
-      favourites:  document.getElementById('pref-favourites').value.trim()
+      favourites:  document.getElementById('pref-favourites').value.trim(),
+      imageMode:   imageModeEl ? imageModeEl.dataset.mode : 'pexels'
     };
 
     localStorage.setItem('lacarta_profile', JSON.stringify(profile));
@@ -1098,6 +1017,7 @@
     document.getElementById('pref-nationality').value = '';
     document.getElementById('pref-favourites').value = '';
     document.querySelectorAll('.pill.active').forEach(p => p.classList.remove('active'));
+    setImageMode('pexels');
     updateProfileIcon();
   }
 
@@ -1113,6 +1033,7 @@
     document.querySelectorAll('#preference-pills .pill').forEach(pill => {
       pill.classList.toggle('active', (p.preferences || []).includes(pill.dataset.value));
     });
+    setImageMode(p.imageMode || 'pexels');
   }
 
   function updateProfileIcon() {
@@ -1153,17 +1074,17 @@
 
   // ── PILL TOGGLES ────────────────────────────────────────────────────
   document.querySelectorAll('.pill').forEach(pill => {
-    pill.addEventListener('click', () => pill.classList.toggle('active'));
+    pill.addEventListener('click', () => {
+      if (!pill.classList.contains('image-mode-pill')) {
+        pill.classList.toggle('active');
+      }
+    });
   });
 
   // ── STARTUP ─────────────────────────────────────────────────────────
   function init() {
     updateProfileIcon();
-    if (!API_KEY) {
-      show('setup-screen');
-    } else {
-      show('home-screen');
-    }
+    show('home-screen');
   }
 
   function showProfile() {
@@ -1171,26 +1092,9 @@
     show('profile-screen');
   }
 
-  function saveApiKey() {
-    const input = document.getElementById('api-key-input').value.trim();
-    if (!input.startsWith('sk-')) {
-      alert('That doesn\'t look like a valid API key. It should start with sk-');
-      return;
-    }
-    API_KEY = input;
-    localStorage.setItem('lacarta_api_key', API_KEY);
-    show('home-screen');
-  }
-
-  function resetApiKey() {
-    localStorage.removeItem('lacarta_api_key');
-    API_KEY = '';
-    show('setup-screen');
-  }
-
   // ── NAVIGATION ──────────────────────────────────────────────────────
   function show(id) {
-    ['home-screen','loading-screen','result-screen','profile-screen','setup-screen'].forEach(s => {
+    ['home-screen','loading-screen','result-screen','profile-screen'].forEach(s => {
       document.getElementById(s).style.display = 'none';
     });
     document.getElementById(id).style.display = 'flex';
@@ -1263,17 +1167,14 @@ If the menu is anything other than straightforward, start with a one-sentence ex
 
 Format dish names in bold using **dish name** markdown syntax.${profileSection}`;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-      },
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: "gpt-4o",
-        messages: [{ role: "user", content: [
-          { type: "image_url", image_url: { url: `data:image/jpeg;base64,${base64Image}` } },
-          { type: "text", text: prompt }
+        model: 'gpt-4o',
+        messages: [{ role: 'user', content: [
+          { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } },
+          { type: 'text', text: prompt }
         ]}],
         max_tokens: 2000
       })
@@ -1365,15 +1266,12 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
       if (p.preferences && p.preferences.length) profileDesc.push(`They enjoy: ${p.preferences.join(', ')}.`);
       if (p.favourites)                          profileDesc.push(`Favourite dishes: ${p.favourites}.`);
 
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${API_KEY}`,
-          "Content-Type": "application/json"
-        },
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: "gpt-4o",
-          messages: [{ role: "user", content:
+          model: 'gpt-4o',
+          messages: [{ role: 'user', content:
             `Here is a translated menu:\n\n${lastMenuText}\n\n` +
             `About this person: ${profileDesc.join(' ')}\n\n` +
             `Based on their tastes, suggest one or two dishes from this menu in a warm, natural way — ` +
@@ -1410,17 +1308,19 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
   async function showDishImage(dishName) {
     const modal   = document.getElementById('image-modal');
     const content = document.getElementById('modal-content');
+    const p       = getProfile();
+    const mode    = p.imageMode || 'pexels';
 
     content.innerHTML = `
       <div class="modal-loading">
         <div class="modal-spinner"></div>
-        <p>Generating image…</p>
+        <p>${mode === 'openai' ? 'Generating image…' : 'Finding image…'}</p>
       </div>`;
     modal.classList.add('visible');
 
     try {
-      let imgSrc = imageCache[dishName] || await generateDishImage(dishName);
-      imageCache[dishName] = imgSrc;
+      let imgSrc = imageCache[dishName + '_' + mode] || await generateDishImage(dishName, mode);
+      imageCache[dishName + '_' + mode] = imgSrc;
       content.innerHTML = `
         <img class="modal-img" src="${imgSrc}" alt="${dishName}">
         <p class="modal-label">${dishName}</p>`;
@@ -1430,27 +1330,34 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
     }
   }
 
-  async function generateDishImage(dishName) {
-    const response = await fetch("https://api.openai.com/v1/images/generations", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-image-1",
-        prompt: `A realistic food photograph of ${dishName} as it would typically be served in a casual everyday Mediterranean restaurant. Simple, honest plating on a plain ceramic plate. Natural light. Not fine dining, not styled — just good, honest food as a tourist would actually receive it.`,
-        n: 1,
-        size: "1024x1024"
-      })
-    });
+  async function generateDishImage(dishName, mode) {
+    if (mode === 'pexels') {
+      const response = await fetch('/api/image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'pexels', query: dishName })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.url) {
+        throw new Error(data.error || 'No image found for this dish');
+      }
+      return data.url;
 
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err.error?.message || `Image API error ${response.status}`);
+    } else {
+      const response = await fetch('/api/image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode: 'openai',
+          prompt: `A realistic food photograph of ${dishName} as it would typically be served in a casual everyday Mediterranean restaurant. Simple, honest plating on a plain ceramic plate. Natural light. Not fine dining, not styled — just good, honest food as a tourist would actually receive it.`
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `Image API error ${response.status}`);
+      }
+      return `data:image/png;base64,${data.b64}`;
     }
-
-    return `data:image/png;base64,${(await response.json()).data[0].b64_json}`;
   }
 
   function closeModal() {
