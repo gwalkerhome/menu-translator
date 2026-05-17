@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="La Carta">
 <link rel="apple-touch-icon" href="icon.png">
 
-<title>v4 La Carta</title>
+<title>v5 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -66,6 +66,97 @@
     to   { transform: scale(1); opacity: 1; }
   }
 
+  /* ── CONSENT SCREEN ── */
+  #consent-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding: 40px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .consent-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 20px;
+    padding: 36px 28px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .consent-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+
+  .consent-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 28px;
+  }
+
+  .consent-divider {
+    border: none;
+    border-top: 1px solid rgba(212,168,67,0.15);
+    margin: 24px 0;
+  }
+
+  .consent-name-label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+
+  .consent-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 20px;
+    outline: none;
+    transition: border-color 0.2s;
+    text-align: left;
+  }
+
+  .consent-input:focus { border-color: var(--gold); }
+  .consent-input::placeholder { color: var(--muted); }
+
+  .consent-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(200,71,46,0.4);
+    transition: opacity 0.15s;
+  }
+
+  .consent-btn:active { opacity: 0.85; }
+
   /* ── HOME SCREEN ── */
   #home-screen {
     display: flex;
@@ -91,7 +182,6 @@
     z-index: 0;
   }
 
-  /* Profile icon — top right of home screen */
   .profile-icon-btn {
     position: absolute;
     top: 20px;
@@ -144,13 +234,8 @@
     max-width: 90px;
   }
 
-  .ornament-top::before {
-    background: linear-gradient(to right, transparent, var(--gold-soft));
-  }
-
-  .ornament-top::after {
-    background: linear-gradient(to left, transparent, var(--gold-soft));
-  }
+  .ornament-top::before { background: linear-gradient(to right, transparent, var(--gold-soft)); }
+  .ornament-top::after  { background: linear-gradient(to left, transparent, var(--gold-soft)); }
 
   .brand-mark {
     width: 80px;
@@ -465,7 +550,6 @@
     border-color: var(--gold);
   }
 
-  /* Recommendation section */
   .recommend-wrap {
     margin-top: 40px;
     padding-top: 24px;
@@ -561,9 +645,7 @@
     border-radius: 12px;
   }
 
-  .profile-section {
-    margin-bottom: 36px;
-  }
+  .profile-section { margin-bottom: 36px; }
 
   .profile-section-title {
     font-family: 'Playfair Display', serif;
@@ -605,10 +687,8 @@
   .profile-input:focus { border-color: var(--gold); }
 
   .profile-select option { background: #2A1208; color: var(--cream); }
-
   .profile-input::placeholder { color: var(--muted); }
 
-  /* Toggle pills */
   .pill-grid {
     display: flex;
     flex-wrap: wrap;
@@ -635,7 +715,6 @@
     color: var(--gold);
   }
 
-  /* Textarea */
   .profile-textarea {
     width: 100%;
     padding: 12px 16px;
@@ -662,7 +741,6 @@
     line-height: 1.5;
   }
 
-  /* Save / clear */
   .profile-save-btn {
     width: 100%;
     padding: 16px;
@@ -694,7 +772,6 @@
     opacity: 0.6;
   }
 
-  /* Dietary disclaimer — profile screen */
   .dietary-warning {
     margin-top: 14px;
     padding: 14px 16px;
@@ -713,7 +790,6 @@
     color: var(--cream);
   }
 
-  /* Dietary disclaimer — results screen */
   .results-allergen-notice {
     padding: 14px 16px;
     background: rgba(200,71,46,0.1);
@@ -820,11 +896,25 @@
 </head>
 <body>
 
+<!-- ══ CONSENT SCREEN ══ -->
+<div id="consent-screen">
+  <div class="consent-card">
+    <div style="font-size:36px; margin-bottom:16px;">🍽️</div>
+    <h2>Welcome to La Carta</h2>
+    <p>You are being loaned the use of this app for testing purposes. Some of the data you generate will be used anonymously to support the test and development process. No personal information will be shared.</p>
+    <hr class="consent-divider">
+    <label class="consent-name-label">Your first name</label>
+    <input class="consent-input" type="text" id="consent-name"
+      placeholder="e.g. Phil, Sarah…"
+      autocorrect="off" autocapitalize="words" spellcheck="false"
+      onkeydown="if(event.key==='Enter') acceptConsent()">
+    <button class="consent-btn" onclick="acceptConsent()">Let's go →</button>
+  </div>
+</div>
+
 <!-- ══ HOME SCREEN ══ -->
 <div id="home-screen">
-
   <button class="profile-icon-btn" id="profile-icon-btn" onclick="showProfile()" title="Your profile">👤</button>
-
   <div class="home-content">
     <div class="ornament-top">✦</div>
     <div class="brand-mark">🍽️</div>
@@ -832,16 +922,13 @@
     <div class="ornament-divider">✦</div>
     <p class="tagline">Any language. Any menu.<br>Anywhere in the world.</p>
     <p class="byline">by Gary Walker</p>
-
     <button class="capture-btn" onclick="document.getElementById('file-input').click()">
       <span class="icon">📷</span>
       <span>Analyse Menu</span>
     </button>
-
     <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handlePhoto(this)">
     <p class="hint">Any language &middot; Any cuisine &middot; Instant translation</p>
   </div>
-
   <div class="ornament-bottom">✦</div>
 </div>
 
@@ -868,16 +955,13 @@
     <button class="back-btn" onclick="show('home-screen')">← Back</button>
   </div>
   <div class="profile-body">
-
     <p class="profile-intro">
       Completely optional — La Carta works perfectly without any of this.
       Fill in what's useful to you and the app will tailor its descriptions accordingly.
     </p>
 
-    <!-- About You -->
     <div class="profile-section">
       <div class="profile-section-title">About You</div>
-
       <label class="profile-label">Language</label>
       <select class="profile-select" id="pref-language">
         <option value="en-GB">English (British)</option>
@@ -893,14 +977,12 @@
         <option value="ja">日本語</option>
         <option value="zh">中文</option>
       </select>
-
       <label class="profile-label">Nationality</label>
       <input class="profile-input" type="text" id="pref-nationality"
         placeholder="e.g. British, American, Japanese…"
         autocorrect="off" autocapitalize="words" spellcheck="false">
     </div>
 
-    <!-- Dietary Requirements -->
     <div class="profile-section">
       <div class="profile-section-title">Dietary Requirements</div>
       <div class="pill-grid" id="dietary-pills">
@@ -922,7 +1004,6 @@
       </div>
     </div>
 
-    <!-- Food Preferences -->
     <div class="profile-section">
       <div class="profile-section-title">Food Preferences</div>
       <div class="pill-grid" id="preference-pills">
@@ -940,7 +1021,6 @@
       <p class="profile-hint">These help the app draw comparisons you'll actually recognise.</p>
     </div>
 
-    <!-- Dish Images -->
     <div class="profile-section">
       <div class="profile-section-title">Dish Images</div>
       <p class="profile-hint" style="margin-bottom: 14px;">
@@ -955,7 +1035,6 @@
 
     <button class="profile-save-btn" onclick="saveProfile()">Save Profile</button>
     <button class="profile-clear-btn" onclick="clearProfile()">Clear profile &amp; use defaults</button>
-
   </div>
 </div>
 
@@ -971,6 +1050,37 @@
   // ── CONFIG ──────────────────────────────────────────────────────────
   const imageCache = {};
   let lastMenuText = '';
+
+  // ── USER & ANALYTICS ────────────────────────────────────────────────
+  function getUser() {
+    return localStorage.getItem('lacarta_user') || 'anonymous';
+  }
+
+  function acceptConsent() {
+    const name = document.getElementById('consent-name').value.trim();
+    if (!name) {
+      document.getElementById('consent-name').focus();
+      document.getElementById('consent-name').style.borderColor = 'var(--terracotta)';
+      return;
+    }
+    localStorage.setItem('lacarta_user', name);
+    localStorage.setItem('lacarta_consented', '1');
+    logEvent('app_open');
+    show('home-screen');
+  }
+
+  function logEvent(event, extras) {
+    // Fire and forget — never block the app
+    fetch('/api/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user:      getUser(),
+        event,
+        ...extras
+      })
+    }).catch(() => {});
+  }
 
   // ── PROFILE ─────────────────────────────────────────────────────────
   const LANG_NAMES = {
@@ -991,10 +1101,8 @@
   }
 
   function saveProfile() {
-    const dietary = [...document.querySelectorAll('#dietary-pills .pill.active')]
-      .map(p => p.dataset.value);
-    const preferences = [...document.querySelectorAll('#preference-pills .pill.active')]
-      .map(p => p.dataset.value);
+    const dietary     = [...document.querySelectorAll('#dietary-pills .pill.active')].map(p => p.dataset.value);
+    const preferences = [...document.querySelectorAll('#preference-pills .pill.active')].map(p => p.dataset.value);
     const imageModeEl = document.querySelector('.image-mode-pill.active');
 
     const profile = {
@@ -1023,9 +1131,9 @@
 
   function loadProfileIntoForm() {
     const p = getProfile();
-    if (p.language)     document.getElementById('pref-language').value = p.language;
-    if (p.nationality)  document.getElementById('pref-nationality').value = p.nationality;
-    if (p.favourites)   document.getElementById('pref-favourites').value = p.favourites;
+    if (p.language)    document.getElementById('pref-language').value = p.language;
+    if (p.nationality) document.getElementById('pref-nationality').value = p.nationality;
+    if (p.favourites)  document.getElementById('pref-favourites').value = p.favourites;
 
     document.querySelectorAll('#dietary-pills .pill').forEach(pill => {
       pill.classList.toggle('active', (p.dietary || []).includes(pill.dataset.value));
@@ -1046,7 +1154,6 @@
   function buildProfilePromptSection() {
     const p = getProfile();
     let lines = [];
-
     if (p.language && p.language !== 'en-GB') {
       lines.push(`Respond entirely in ${LANG_NAMES[p.language] || p.language}.`);
     }
@@ -1062,7 +1169,6 @@
     if (p.favourites) {
       lines.push(`Dishes they particularly enjoy: ${p.favourites}.`);
     }
-
     return lines.length ? '\n\n' + lines.join('\n') : '';
   }
 
@@ -1084,7 +1190,12 @@
   // ── STARTUP ─────────────────────────────────────────────────────────
   function init() {
     updateProfileIcon();
-    show('home-screen');
+    if (!localStorage.getItem('lacarta_consented')) {
+      show('consent-screen');
+    } else {
+      logEvent('app_open');
+      show('home-screen');
+    }
   }
 
   function showProfile() {
@@ -1094,7 +1205,7 @@
 
   // ── NAVIGATION ──────────────────────────────────────────────────────
   function show(id) {
-    ['home-screen','loading-screen','result-screen','profile-screen'].forEach(s => {
+    ['consent-screen','home-screen','loading-screen','result-screen','profile-screen'].forEach(s => {
       document.getElementById(s).style.display = 'none';
     });
     document.getElementById(id).style.display = 'flex';
@@ -1114,12 +1225,14 @@
     const file = input.files[0];
     show('loading-screen');
     try {
-      const base64 = await fileToBase64(file);
+      const base64   = await fileToBase64(file);
       const menuText = await analyseMenu(base64);
-      lastMenuText = menuText;
+      lastMenuText   = menuText;
+      logEvent('menu_scan', { success: true });
       renderResult(menuText);
       show('result-screen');
     } catch (err) {
+      logEvent('menu_scan', { success: false, details: err.message });
       show('result-screen');
       document.getElementById('result-body').innerHTML =
         `<div class="error-box"><strong>Something went wrong</strong>${err.message || JSON.stringify(err)}</div>`;
@@ -1154,7 +1267,6 @@
   // ── ANALYSE MENU ─────────────────────────────────────────────────────
   async function analyseMenu(base64Image) {
     const profileSection = buildProfilePromptSection();
-
     const prompt = `You are a menu translation and explanation assistant for travellers.
 
 First, automatically detect the language of the menu (it may be Spanish, Catalan, Italian, French, Portuguese, or any other language).
@@ -1219,7 +1331,6 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
       }
     }
 
-    // Add allergen notice at top if dietary requirements are set
     const p = getProfile();
     if (p.dietary && p.dietary.length) {
       html = `<div class="results-allergen-notice">
@@ -1230,7 +1341,6 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
       </div>` + html;
     }
 
-    // Add recommendation button if profile has preferences
     if (hasPreferences()) {
       html += `
         <div class="recommend-wrap">
@@ -1290,6 +1400,7 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
       }
 
       const text = (await response.json()).choices[0].message.content;
+      logEvent('recommendation', { success: true });
       card.innerHTML = `
         <div class="recommend-card">
           <div class="recommend-card-label">For you</div>
@@ -1298,6 +1409,7 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
       btn.style.display = 'none';
 
     } catch (err) {
+      logEvent('recommendation', { success: false });
       card.innerHTML = `<div class="error-box"><strong>Couldn't get a recommendation</strong>${err.message}</div>`;
       btn.disabled = false;
       btn.style.opacity = '1';
@@ -1321,10 +1433,12 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
     try {
       let imgSrc = imageCache[dishName + '_' + mode] || await generateDishImage(dishName, mode);
       imageCache[dishName + '_' + mode] = imgSrc;
+      logEvent('image_view', { details: dishName, imageMode: mode, success: true });
       content.innerHTML = `
         <img class="modal-img" src="${imgSrc}" alt="${dishName}">
         <p class="modal-label">${dishName}</p>`;
     } catch (err) {
+      logEvent('image_view', { details: dishName, imageMode: mode, success: false });
       content.innerHTML = `
         <div class="error-box"><strong>Couldn't load image</strong>${err.message}</div>`;
     }
@@ -1338,11 +1452,8 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
         body: JSON.stringify({ mode: 'pexels', query: dishName })
       });
       const data = await response.json();
-      if (!response.ok || !data.url) {
-        throw new Error(data.error || 'No image found for this dish');
-      }
+      if (!response.ok || !data.url) throw new Error(data.error || 'No image found for this dish');
       return data.url;
-
     } else {
       const response = await fetch('/api/image', {
         method: 'POST',
@@ -1353,9 +1464,7 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
         })
       });
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || `Image API error ${response.status}`);
-      }
+      if (!response.ok) throw new Error(data.error || `Image API error ${response.status}`);
       return `data:image/png;base64,${data.b64}`;
     }
   }
