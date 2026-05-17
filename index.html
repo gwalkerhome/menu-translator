@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="La Carta">
 <link rel="apple-touch-icon" href="icon.png">
 
-<title>v5 La Carta</title>
+<title>v6 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -1075,7 +1075,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        user:      getUser(),
+        user:  getUser(),
         event,
         ...extras
       })
@@ -1225,10 +1225,12 @@
     const file = input.files[0];
     show('loading-screen');
     try {
-      const base64   = await fileToBase64(file);
-      const menuText = await analyseMenu(base64);
-      lastMenuText   = menuText;
-      logEvent('menu_scan', { success: true });
+      const base64 = await fileToBase64(file);
+      const { text: menuText, langFrom } = await analyseMenu(base64);
+      lastMenuText = menuText;
+      const p = getProfile();
+      const langTo = LANG_NAMES[p.language] || 'British English';
+      logEvent('menu_scan', { success: true, language: langFrom + ' → ' + langTo });
       renderResult(menuText);
       show('result-screen');
     } catch (err) {
@@ -1269,7 +1271,9 @@
     const profileSection = buildProfilePromptSection();
     const prompt = `You are a menu translation and explanation assistant for travellers.
 
-First, automatically detect the language of the menu (it may be Spanish, Catalan, Italian, French, Portuguese, or any other language).
+On the very first line of your response write "LANG:" followed by the detected language of the menu — for example "LANG:Spanish" or "LANG:Catalan" — then leave a blank line before your menu analysis.
+
+Automatically detect the language of the menu (it may be Spanish, Catalan, Italian, French, Portuguese, or any other language).
 
 Take the menu in this image and provide a clear breakdown of what it shows. Look for extra information (for example lines separating different courses, is it a choice of starter or are all included, is dessert included, drinks, etc.) Where appropriate, separate starters and other courses.
 
@@ -1277,7 +1281,7 @@ Give an English translation next to each dish and a one-sentence factual descrip
 
 If the menu is anything other than straightforward, start with a one-sentence explanation of how the menu works.
 
-Format dish names in bold using **dish name** markdown syntax.${profileSection}`;
+Format dish names in bold using **dish name** markdown syntax. Use ## for section headings (e.g. ## Starters, ## Main Courses) — do not bold standalone section headings.${profileSection}`;
 
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -1297,7 +1301,14 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
       throw new Error(err.error?.message || `API error ${response.status}`);
     }
 
-    return (await response.json()).choices[0].message.content;
+    const raw = (await response.json()).choices[0].message.content;
+
+    // Extract the LANG: marker from the first line, then strip it
+    const langMatch = raw.match(/^LANG:(.+)/i);
+    const langFrom  = langMatch ? langMatch[1].trim() : 'unknown';
+    const text      = raw.replace(/^LANG:.+\n?/i, '').trimStart();
+
+    return { text, langFrom };
   }
 
   // ── RENDER RESULT ────────────────────────────────────────────────────
@@ -1316,17 +1327,24 @@ Format dish names in bold using **dish name** markdown syntax.${profileSection}`
       } else if (line === '---') {
         html += '<hr>';
       } else {
-        const boldMatch = line.match(/\*\*(.*?)\*\*/);
-        if (boldMatch) {
-          const dishName = boldMatch[1];
-          const formatted = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-          html += `
-            <div class="dish-row">
-              <div class="dish-text">${formatted}</div>
-              <button class="img-btn" onclick="showDishImage('${escapeDishName(dishName)}')">🔍</button>
-            </div>`;
+        // Check if this line is bold-only (a heading/label, not a dish)
+        // e.g. **Starters** or **Tuesday** on its own — no description after it
+        const boldOnly = line.match(/^\*\*(.*?)\*\*:?\s*$/);
+        if (boldOnly) {
+          html += `<h3>${boldOnly[1]}</h3>`;
         } else {
-          html += `<p>${line}</p>`;
+          const boldMatch = line.match(/\*\*(.*?)\*\*/);
+          if (boldMatch) {
+            const dishName = boldMatch[1];
+            const formatted = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            html += `
+              <div class="dish-row">
+                <div class="dish-text">${formatted}</div>
+                <button class="img-btn" onclick="showDishImage('${escapeDishName(dishName)}')">🔍</button>
+              </div>`;
+          } else {
+            html += `<p>${line}</p>`;
+          }
         }
       }
     }
