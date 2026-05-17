@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>La Carta Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:              #1C0B05;
+    --bg-mid:          #2A1208;
+    --terracotta:      #C8472E;
+    --terracotta-dark: #A33520;
+    --gold:            #D4A843;
+    --gold-soft:       #B8904A;
+    --cream:           #F5EDD8;
+    --cream-soft:      #E0CBA8;
+    --muted:           #9A8060;
+    --shadow:          0 4px 24px rgba(0,0,0,0.4);
+    --shadow-lg:       0 8px 40px rgba(0,0,0,0.55);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--bg);
+    color: var(--cream);
+    min-height: 100vh;
+  }
+
+  /* ── PIN SCREEN ── */
+  #pin-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .pin-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 20px;
+    padding: 36px 28px;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .pin-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .pin-card p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .pin-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    letter-spacing: 6px;
+    text-align: center;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .pin-input:focus { border-color: var(--gold); }
+
+  .pin-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(200,71,46,0.4);
+    transition: opacity 0.15s;
+  }
+
+  .pin-btn:active { opacity: 0.85; }
+
+  .pin-error {
+    margin-top: 14px;
+    font-size: 13px;
+    color: #f5bdb5;
+    min-height: 18px;
+  }
+
+  /* ── DASHBOARD ── */
+  #dashboard { display: none; }
+
+  .dash-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.4);
+  }
+
+  .dash-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .logout-btn {
+    background: none;
+    border: 1px solid rgba(212,168,67,0.3);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .logout-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .dash-body {
+    padding: 24px 20px 60px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* ── STAT CARDS ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,168,67,0.15);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 36px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+  }
+
+  /* ── GUEST PIN CARD ── */
+  .pin-manage-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 14px;
+    padding: 22px;
+  }
+
+  .pin-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .pin-status-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .pin-status-value {
+    font-size: 15px;
+    color: var(--cream);
+    font-weight: 700;
+  }
+
+  .status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .status-badge.active {
+    background: rgba(80,180,80,0.15);
+    border: 1px solid rgba(80,180,80,0.4);
+    color: #90e890;
+  }
+
+  .status-badge.inactive {
+    background: rgba(200,71,46,0.12);
+    border: 1px solid rgba(200,71,46,0.3);
+    color: #f5bdb5;
+  }
+
+  .admin-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .admin-input:focus { border-color: var(--gold); }
+
+  .admin-label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .toggle-label {
+    font-size: 14px;
+    color: var(--cream-soft);
+  }
+
+  .toggle {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    cursor: pointer;
+  }
+
+  .toggle input { opacity: 0; width: 0; height: 0; }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 13px;
+    border: 1px solid rgba(212,168,67,0.2);
+    transition: background 0.2s;
+  }
+
+  .toggle input:checked + .toggle-track { background: rgba(80,180,80,0.4); border-color: rgba(80,180,80,0.5); }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: var(--muted);
+    border-radius: 50%;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .toggle input:checked ~ .toggle-thumb { transform: translateX(20px); background: #90e890; }
+
+  .save-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(200,71,46,0.4);
+    transition: opacity 0.15s;
+    margin-top: 4px;
+  }
+
+  .save-btn:active { opacity: 0.85; }
+
+  .save-feedback {
+    text-align: center;
+    font-size: 13px;
+    color: #90e890;
+    margin-top: 10px;
+    min-height: 18px;
+  }
+
+  /* ── USER TABLE ── */
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .user-table th {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(212,168,67,0.15);
+  }
+
+  .user-table td {
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--cream-soft);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .user-table td:first-child {
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  .user-table td.num {
+    text-align: center;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* ── ACTIVITY FEED ── */
+  .activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .activity-item:last-child { border-bottom: none; }
+
+  .activity-time {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 90px;
+    padding-top: 2px;
+  }
+
+  .activity-user {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cream);
+    min-width: 70px;
+  }
+
+  .activity-detail {
+    font-size: 13px;
+    color: var(--cream-soft);
+    flex: 1;
+  }
+
+  .event-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-right: 6px;
+  }
+
+  .chip-scan    { background: rgba(212,168,67,0.15); color: var(--gold); }
+  .chip-image   { background: rgba(80,120,200,0.15); color: #a0c0f8; }
+  .chip-rec     { background: rgba(120,200,120,0.15); color: #90e890; }
+  .chip-open    { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+  /* ── BAR CHART ── */
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .bar-label {
+    font-size: 13px;
+    color: var(--cream-soft);
+    min-width: 140px;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 10px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--terracotta), var(--gold));
+    border-radius: 5px;
+    transition: width 0.6s ease;
+  }
+
+  .bar-count {
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  /* ── MODE SPLIT ── */
+  .mode-split {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .mode-card {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,168,67,0.12);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+
+  .mode-pct {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .mode-pct.standard { color: var(--gold-soft); }
+  .mode-pct.beautiful { color: #a0c0f8; }
+
+  .mode-name {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .mode-count { font-size: 12px; color: var(--muted); }
+
+  .loading-msg {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .error-box {
+    background: rgba(200,71,46,0.14);
+    border: 1px solid rgba(200,71,46,0.35);
+    border-radius: 10px;
+    padding: 14px;
+    color: #f5bdb5;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ PIN SCREEN ══ -->
+<div id="pin-screen">
+  <div class="pin-card">
+    <div style="font-size:32px; margin-bottom:14px;">🔐</div>
+    <h2>La Carta Admin</h2>
+    <p>Enter your admin PIN to continue</p>
+    <input class="pin-input" type="password" id="pin-input" inputmode="numeric"
+      placeholder="· · · ·" maxlength="8"
+      onkeydown="if(event.key==='Enter') submitPin()">
+    <button class="pin-btn" onclick="submitPin()">Enter →</button>
+    <p class="pin-error" id="pin-error"></p>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="dashboard">
+  <div class="dash-header">
+    <h1>✦ La Carta Admin</h1>
+    <button class="logout-btn" onclick="logout()">Log out</button>
+  </div>
+  <div class="dash-body">
+
+    <!-- Stat Cards -->
+    <div class="stat-grid" id="stat-grid">
+      <div class="stat-card"><div class="stat-value" id="stat-scans">—</div><div class="stat-label">Menu Scans</div></div>
+      <div class="stat-card"><div class="stat-value" id="stat-users">—</div><div class="stat-label">Users</div></div>
+      <div class="stat-card"><div class="stat-value" id="stat-images">—</div><div class="stat-label">Images Viewed</div></div>
+      <div class="stat-card"><div class="stat-value" id="stat-recs">—</div><div class="stat-label">Recommendations</div></div>
+    </div>
+
+    <!-- Guest PIN Management -->
+    <div class="section">
+      <div class="section-title">Guest Access</div>
+      <div class="pin-manage-card">
+        <div class="pin-status-row">
+          <div>
+            <div class="pin-status-label">Current guest PIN</div>
+            <div class="pin-status-value" id="current-guest-pin">—</div>
+          </div>
+          <div id="guest-status-badge" class="status-badge inactive">Inactive</div>
+        </div>
+        <div class="pin-status-row" style="margin-bottom:20px;">
+          <div>
+            <div class="pin-status-label">Expires</div>
+            <div class="pin-status-value" id="current-expiry">—</div>
+          </div>
+        </div>
+
+        <label class="admin-label">New guest PIN</label>
+        <input class="admin-input" type="text" id="new-guest-pin" placeholder="e.g. 7823" inputmode="numeric" maxlength="8">
+
+        <label class="admin-label">Expiry date</label>
+        <input class="admin-input" type="date" id="new-expiry">
+
+        <div class="toggle-row">
+          <label class="toggle">
+            <input type="checkbox" id="guest-active-toggle">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+          <span class="toggle-label">Guest access active</span>
+        </div>
+
+        <button class="save-btn" onclick="saveGuestConfig()">Save changes</button>
+        <div class="save-feedback" id="save-feedback"></div>
+      </div>
+    </div>
+
+    <!-- Per-User Summary -->
+    <div class="section">
+      <div class="section-title">By User</div>
+      <div id="user-table-wrap"><div class="loading-msg">Loading…</div></div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="section">
+      <div class="section-title">Recent Activity</div>
+      <div id="activity-feed"><div class="loading-msg">Loading…</div></div>
+    </div>
+
+    <!-- Language Breakdown -->
+    <div class="section">
+      <div class="section-title">Menu Languages Scanned</div>
+      <div id="lang-chart"><div class="loading-msg">Loading…</div></div>
+    </div>
+
+    <!-- Image Mode Usage -->
+    <div class="section">
+      <div class="section-title">Image Mode Usage</div>
+      <div id="mode-chart"><div class="loading-msg">Loading…</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let storedPin = '';
+  let eventsData = [];
+
+  // ── PIN ENTRY ────────────────────────────────────────────────────────
+  async function submitPin() {
+    const pin = document.getElementById('pin-input').value.trim();
+    const errEl = document.getElementById('pin-error');
+    if (!pin) return;
+
+    errEl.textContent = 'Checking…';
+
+    try {
+      const res = await fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'verify', pin })
+      });
+      const data = await res.json();
+
+      if (data.valid && data.role === 'admin') {
+        storedPin = pin;
+        errEl.textContent = '';
+        document.getElementById('pin-screen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        loadDashboard();
+      } else {
+        errEl.textContent = 'Incorrect PIN — admin PIN required';
+        document.getElementById('pin-input').value = '';
+      }
+    } catch (err) {
+      errEl.textContent = 'Connection error. Try again.';
+    }
+  }
+
+  document.getElementById('pin-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitPin();
+  });
+
+  function logout() {
+    storedPin = '';
+    eventsData = [];
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('pin-screen').style.display = 'flex';
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-error').textContent = '';
+  }
+
+  // ── LOAD DASHBOARD ───────────────────────────────────────────────────
+  async function loadDashboard() {
+    try {
+      const res = await fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'admin_data', pin: storedPin })
+      });
+      const data = await res.json();
+
+      if (data.error) throw new Error(data.error);
+
+      // Populate guest PIN form
+      populateGuestForm(data.config);
+
+      // Process events (first row may be headers)
+      const rows = data.events || [];
+      eventsData = rows.filter(r => r[0] !== 'Timestamp' && r[0] !== '' && r[0]);
+      renderAll();
+
+    } catch (err) {
+      document.getElementById('user-table-wrap').innerHTML =
+        `<div class="error-box">Failed to load data: ${err.message}</div>`;
+    }
+  }
+
+  // ── GUEST FORM ───────────────────────────────────────────────────────
+  function populateGuestForm(config) {
+    if (!config) return;
+    document.getElementById('current-guest-pin').textContent = config.guest_pin || '—';
+    document.getElementById('current-expiry').textContent    = config.guest_pin_expiry || '—';
+    document.getElementById('new-expiry').value              = config.guest_pin_expiry || '';
+    document.getElementById('new-guest-pin').value           = config.guest_pin || '';
+
+    const active = config.guest_pin_active.toLowerCase() === 'true';
+    document.getElementById('guest-active-toggle').checked = active;
+
+    const badge = document.getElementById('guest-status-badge');
+    badge.textContent = active ? 'Active' : 'Inactive';
+    badge.className = 'status-badge ' + (active ? 'active' : 'inactive');
+  }
+
+  async function saveGuestConfig() {
+    const newPin    = document.getElementById('new-guest-pin').value.trim();
+    const newExpiry = document.getElementById('new-expiry').value;
+    const active    = document.getElementById('guest-active-toggle').checked;
+    const fb        = document.getElementById('save-feedback');
+
+    if (!newPin) { fb.style.color = '#f5bdb5'; fb.textContent = 'Please enter a PIN'; return; }
+    if (!newExpiry) { fb.style.color = '#f5bdb5'; fb.textContent = 'Please set an expiry date'; return; }
+
+    fb.style.color = 'var(--muted)';
+    fb.textContent = 'Saving…';
+
+    try {
+      const res = await fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'set_config',
+          admin_pin: storedPin,
+          guest_pin: newPin,
+          guest_pin_expiry: newExpiry,
+          guest_pin_active: active.toString()
+        })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      document.getElementById('current-guest-pin').textContent = newPin;
+      document.getElementById('current-expiry').textContent    = newExpiry;
+      const badge = document.getElementById('guest-status-badge');
+      badge.textContent = active ? 'Active' : 'Inactive';
+      badge.className   = 'status-badge ' + (active ? 'active' : 'inactive');
+
+      fb.style.color = '#90e890';
+      fb.textContent = '✓ Saved';
+      setTimeout(() => { fb.textContent = ''; }, 3000);
+    } catch (err) {
+      fb.style.color = '#f5bdb5';
+      fb.textContent = 'Error: ' + err.message;
+    }
+  }
+
+  // ── RENDER ALL ───────────────────────────────────────────────────────
+  function renderAll() {
+    renderStats();
+    renderUserTable();
+    renderActivity();
+    renderLanguages();
+    renderModes();
+  }
+
+  // ── STATS ────────────────────────────────────────────────────────────
+  function renderStats() {
+    const scans  = eventsData.filter(r => r[2] === 'menu_scan' && r[6] !== 'false').length;
+    const images = eventsData.filter(r => r[2] === 'image_view' && r[6] !== 'false').length;
+    const recs   = eventsData.filter(r => r[2] === 'recommendation' && r[6] !== 'false').length;
+    const users  = new Set(eventsData.map(r => r[1]).filter(u => u && u !== 'anonymous')).size;
+
+    document.getElementById('stat-scans').textContent  = scans;
+    document.getElementById('stat-users').textContent  = users;
+    document.getElementById('stat-images').textContent = images;
+    document.getElementById('stat-recs').textContent   = recs;
+  }
+
+  // ── USER TABLE ───────────────────────────────────────────────────────
+  function renderUserTable() {
+    const byUser = {};
+    eventsData.forEach(r => {
+      const user = r[1] || 'anonymous';
+      if (!byUser[user]) byUser[user] = { scans: 0, images: 0, recs: 0 };
+      if (r[2] === 'menu_scan' && r[6] !== 'false')         byUser[user].scans++;
+      if (r[2] === 'image_view' && r[6] !== 'false')        byUser[user].images++;
+      if (r[2] === 'recommendation' && r[6] !== 'false')    byUser[user].recs++;
+    });
+
+    const sorted = Object.entries(byUser).sort((a, b) => b[1].scans - a[1].scans);
+
+    if (!sorted.length) {
+      document.getElementById('user-table-wrap').innerHTML = '<p style="color:var(--muted);font-size:14px;">No data yet.</p>';
+      return;
+    }
+
+    let html = `<table class="user-table">
+      <tr><th>User</th><th style="text-align:center">Scans</th><th style="text-align:center">Images</th><th style="text-align:center">Recs</th></tr>`;
+    sorted.forEach(([user, counts]) => {
+      html += `<tr>
+        <td>${user}</td>
+        <td class="num">${counts.scans}</td>
+        <td class="num">${counts.images}</td>
+        <td class="num">${counts.recs}</td>
+      </tr>`;
+    });
+    html += '</table>';
+    document.getElementById('user-table-wrap').innerHTML = html;
+  }
+
+  // ── ACTIVITY FEED ────────────────────────────────────────────────────
+  function renderActivity() {
+    const recent = [...eventsData].reverse().slice(0, 25);
+    if (!recent.length) {
+      document.getElementById('activity-feed').innerHTML = '<p style="color:var(--muted);font-size:14px;">No activity yet.</p>';
+      return;
+    }
+
+    const chipMap = {
+      menu_scan:      ['chip-scan',  'Scan'],
+      image_view:     ['chip-image', 'Image'],
+      recommendation: ['chip-rec',   'Rec'],
+      app_open:       ['chip-open',  'Open']
+    };
+
+    let html = '';
+    recent.forEach(r => {
+      const ts     = r[0] ? new Date(r[0]) : null;
+      const time   = ts ? ts.toLocaleDateString('en-GB', { day:'numeric', month:'short' }) + ' ' +
+                          ts.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }) : '—';
+      const user   = r[1] || '—';
+      const event  = r[2] || '';
+      const detail = r[3] || '';
+      const lang   = r[5] || '';
+      const [chipClass, chipLabel] = chipMap[event] || ['chip-open', event];
+
+      let detail_text = detail || lang || '';
+      html += `<div class="activity-item">
+        <div class="activity-time">${time}</div>
+        <div class="activity-user">${user}</div>
+        <div class="activity-detail">
+          <span class="event-chip ${chipClass}">${chipLabel}</span>
+          ${detail_text}
+        </div>
+      </div>`;
+    });
+    document.getElementById('activity-feed').innerHTML = html;
+  }
+
+  // ── LANGUAGE CHART ───────────────────────────────────────────────────
+  function renderLanguages() {
+    const langCounts = {};
+    eventsData.filter(r => r[2] === 'menu_scan' && r[5]).forEach(r => {
+      const langField = r[5]; // e.g. "Spanish → British English"
+      const fromLang  = langField.split('→')[0].trim() || langField;
+      langCounts[fromLang] = (langCounts[fromLang] || 0) + 1;
+    });
+
+    const sorted = Object.entries(langCounts).sort((a, b) => b[1] - a[1]);
+    if (!sorted.length) {
+      document.getElementById('lang-chart').innerHTML = '<p style="color:var(--muted);font-size:14px;">No scans yet.</p>';
+      return;
+    }
+
+    const max = sorted[0][1];
+    let html = '';
+    sorted.forEach(([lang, count]) => {
+      const pct = Math.round((count / max) * 100);
+      html += `<div class="bar-row">
+        <div class="bar-label">${lang}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <div class="bar-count">${count}</div>
+      </div>`;
+    });
+    document.getElementById('lang-chart').innerHTML = html;
+  }
+
+  // ── MODE CHART ───────────────────────────────────────────────────────
+  function renderModes() {
+    const imageEvents = eventsData.filter(r => r[2] === 'image_view' && r[6] !== 'false');
+    const standard    = imageEvents.filter(r => r[4] === 'pexels').length;
+    const beautiful   = imageEvents.filter(r => r[4] === 'openai').length;
+    const total       = standard + beautiful;
+
+    if (!total) {
+      document.getElementById('mode-chart').innerHTML = '<p style="color:var(--muted);font-size:14px;">No images viewed yet.</p>';
+      return;
+    }
+
+    const stdPct  = Math.round((standard  / total) * 100);
+    const btyPct  = Math.round((beautiful / total) * 100);
+
+    document.getElementById('mode-chart').innerHTML = `
+      <div class="mode-split">
+        <div class="mode-card">
+          <div class="mode-name">Standard</div>
+          <div class="mode-pct standard">${stdPct}%</div>
+          <div class="mode-count">${standard} views</div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-name">✦ Beautiful</div>
+          <div class="mode-pct beautiful">${btyPct}%</div>
+          <div class="mode-count">${beautiful} views</div>
+        </div>
+      </div>`;
+  }
+</script>
+</body>
+</html>

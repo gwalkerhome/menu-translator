@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="La Carta">
 <link rel="apple-touch-icon" href="icon.png">
 
-<title>v7 La Carta</title>
+<title>v8 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -891,6 +891,101 @@
   }
 
   .error-box strong { display: block; margin-bottom: 6px; font-size: 15px; color: var(--cream); }
+
+  /* ── PIN MODAL ── */
+  #pin-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(8,3,1,0.93);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: fadeIn 0.2s ease both;
+  }
+
+  #pin-modal.visible { display: flex; }
+
+  .pin-modal-card {
+    background: var(--bg-mid);
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 20px;
+    padding: 32px 24px;
+    max-width: 320px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    animation: scaleIn 0.2s ease both;
+  }
+
+  .pin-modal-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+
+  .pin-modal-card p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+
+  .pin-modal-input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 22px;
+    letter-spacing: 8px;
+    text-align: center;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .pin-modal-input:focus { border-color: var(--gold); }
+
+  .pin-modal-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(200,71,46,0.4);
+    margin-bottom: 10px;
+    transition: opacity 0.15s;
+  }
+
+  .pin-modal-btn:active { opacity: 0.85; }
+
+  .pin-modal-cancel {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .pin-modal-error {
+    font-size: 12px;
+    color: #f5bdb5;
+    margin-bottom: 10px;
+    min-height: 16px;
+  }
 </style>
 
 </head>
@@ -1029,12 +1124,27 @@
       </p>
       <div class="pill-grid">
         <button class="pill image-mode-pill active" data-mode="pexels" onclick="setImageMode('pexels')">Standard (free)</button>
-        <button class="pill image-mode-pill" data-mode="openai" onclick="setImageMode('openai')">✦ Beautiful (AI)</button>
+        <button class="pill image-mode-pill" data-mode="openai" onclick="requestBeautifulMode()">✦ Beautiful (AI)</button>
       </div>
     </div>
 
     <button class="profile-save-btn" onclick="saveProfile()">Save Profile</button>
     <button class="profile-clear-btn" onclick="clearProfile()">Clear profile &amp; use defaults</button>
+  </div>
+</div>
+
+<!-- ══ PIN MODAL ══ -->
+<div id="pin-modal">
+  <div class="pin-modal-card">
+    <div style="font-size:28px; margin-bottom:12px;">✦</div>
+    <h3>Beautiful Mode</h3>
+    <p>AI-generated images require a PIN.<br>Ask Gary if you'd like access.</p>
+    <input class="pin-modal-input" type="password" id="pin-modal-input"
+      inputmode="numeric" placeholder="· · · ·" maxlength="8"
+      onkeydown="if(event.key==='Enter') submitBeautifulPin()">
+    <div class="pin-modal-error" id="pin-modal-error"></div>
+    <button class="pin-modal-btn" onclick="submitBeautifulPin()">Unlock →</button>
+    <button class="pin-modal-cancel" onclick="closePinModal()">Cancel</button>
   </div>
 </div>
 
@@ -1488,6 +1598,64 @@ Use ## markdown headings for all section headings and course categories — for 
 
   document.getElementById('image-modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
+  });
+
+  // ── BEAUTIFUL MODE PIN ────────────────────────────────────────────────
+  function requestBeautifulMode() {
+    // If already verified this session, just switch
+    if (sessionStorage.getItem('lacarta_pin_ok') === 'true') {
+      setImageMode('openai');
+      return;
+    }
+    // If Beautiful is already the saved mode (returning user), allow freely
+    const p = getProfile();
+    if (p.imageMode === 'openai') {
+      setImageMode('openai');
+      return;
+    }
+    // Otherwise show PIN modal
+    document.getElementById('pin-modal-input').value = '';
+    document.getElementById('pin-modal-error').textContent = '';
+    document.getElementById('pin-modal').classList.add('visible');
+    setTimeout(() => document.getElementById('pin-modal-input').focus(), 100);
+  }
+
+  async function submitBeautifulPin() {
+    const pin  = document.getElementById('pin-modal-input').value.trim();
+    const errEl = document.getElementById('pin-modal-error');
+    if (!pin) return;
+
+    errEl.textContent = 'Checking…';
+
+    try {
+      const res = await fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'verify', pin })
+      });
+      const data = await res.json();
+
+      if (data.valid) {
+        sessionStorage.setItem('lacarta_pin_ok', 'true');
+        closePinModal();
+        setImageMode('openai');
+      } else {
+        const reason = data.reason === 'expired' ? 'That PIN has expired' : 'Incorrect PIN';
+        errEl.textContent = reason;
+        document.getElementById('pin-modal-input').value = '';
+        document.getElementById('pin-modal-input').focus();
+      }
+    } catch (err) {
+      errEl.textContent = 'Connection error. Try again.';
+    }
+  }
+
+  function closePinModal() {
+    document.getElementById('pin-modal').classList.remove('visible');
+  }
+
+  document.getElementById('pin-modal').addEventListener('click', function(e) {
+    if (e.target === this) closePinModal();
   });
 </script>
 
