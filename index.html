@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="La Carta">
 <link rel="apple-touch-icon" href="icon.png">
 
-<title>v6 La Carta</title>
+<title>v7 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -1281,7 +1281,9 @@ Give an English translation next to each dish and a one-sentence factual descrip
 
 If the menu is anything other than straightforward, start with a one-sentence explanation of how the menu works.
 
-Format dish names in bold using **dish name** markdown syntax. Use ## for section headings (e.g. ## Starters, ## Main Courses) — do not bold standalone section headings.${profileSection}`;
+Format every dish name in bold using **dish name** markdown syntax, with its description on the same line immediately after.
+
+Use ## markdown headings for all section headings and course categories — for example ## Starters, ## Main Courses, ## Desserts, ## Drinks. Never use bold (**) for section headings or category labels — only for actual dish names.${profileSection}`;
 
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -1327,24 +1329,17 @@ Format dish names in bold using **dish name** markdown syntax. Use ## for sectio
       } else if (line === '---') {
         html += '<hr>';
       } else {
-        // Check if this line is bold-only (a heading/label, not a dish)
-        // e.g. **Starters** or **Tuesday** on its own — no description after it
-        const boldOnly = line.match(/^\*\*(.*?)\*\*:?\s*$/);
-        if (boldOnly) {
-          html += `<h3>${boldOnly[1]}</h3>`;
+        const boldMatch = line.match(/\*\*(.*?)\*\*/);
+        if (boldMatch) {
+          const dishName = boldMatch[1];
+          const formatted = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+          html += `
+            <div class="dish-row">
+              <div class="dish-text">${formatted}</div>
+              <button class="img-btn" onclick="showDishImage('${escapeDishName(dishName)}')">🔍</button>
+            </div>`;
         } else {
-          const boldMatch = line.match(/\*\*(.*?)\*\*/);
-          if (boldMatch) {
-            const dishName = boldMatch[1];
-            const formatted = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            html += `
-              <div class="dish-row">
-                <div class="dish-text">${formatted}</div>
-                <button class="img-btn" onclick="showDishImage('${escapeDishName(dishName)}')">🔍</button>
-              </div>`;
-          } else {
-            html += `<p>${line}</p>`;
-          }
+          html += `<p>${line}</p>`;
         }
       }
     }
