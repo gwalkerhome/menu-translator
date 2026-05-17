@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="La Carta">
 <link rel="apple-touch-icon" href="icon.png">
 
-<title>v8 La Carta</title>
+<title>v9 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -362,6 +362,26 @@
     color: var(--muted);
     letter-spacing: 1.5px;
     text-transform: uppercase;
+  }
+
+  .prev-menu-btn {
+    display: block;
+    margin: 16px auto 0;
+    background: none;
+    border: 1px solid rgba(212,168,67,0.22);
+    border-radius: 10px;
+    color: var(--gold-soft);
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .prev-menu-btn:active {
+    border-color: var(--gold);
+    color: var(--gold);
   }
 
   .ornament-bottom {
@@ -1023,6 +1043,7 @@
     </button>
     <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handlePhoto(this)">
     <p class="hint">Any language &middot; Any cuisine &middot; Instant translation</p>
+    <button id="prev-menu-btn" class="prev-menu-btn" onclick="showPreviousMenu()" style="display:none">↩ Previous menu</button>
   </div>
   <div class="ornament-bottom">✦</div>
 </div>
@@ -1159,7 +1180,8 @@
 <script>
   // ── CONFIG ──────────────────────────────────────────────────────────
   const imageCache = {};
-  let lastMenuText = '';
+  let lastMenuText  = '';
+  let currentScreen = 'home-screen';
 
   // ── USER & ANALYTICS ────────────────────────────────────────────────
   function getUser() {
@@ -1300,6 +1322,7 @@
   // ── STARTUP ─────────────────────────────────────────────────────────
   function init() {
     updateProfileIcon();
+    updatePreviousMenuBtn();
     if (!localStorage.getItem('lacarta_consented')) {
       show('consent-screen');
     } else {
@@ -1319,12 +1342,27 @@
       document.getElementById(s).style.display = 'none';
     });
     document.getElementById(id).style.display = 'flex';
+    currentScreen = id;
   }
 
   function goHome() {
     document.getElementById('file-input').value = '';
     lastMenuText = '';
+    updatePreviousMenuBtn();
     show('home-screen');
+  }
+
+  function showPreviousMenu() {
+    const saved = localStorage.getItem('lacarta_last_menu');
+    if (!saved) return;
+    lastMenuText = saved;
+    renderResult(saved);
+    show('result-screen');
+  }
+
+  function updatePreviousMenuBtn() {
+    const btn = document.getElementById('prev-menu-btn');
+    if (btn) btn.style.display = localStorage.getItem('lacarta_last_menu') ? 'block' : 'none';
   }
 
   init();
@@ -1338,6 +1376,8 @@
       const base64 = await fileToBase64(file);
       const { text: menuText, langFrom } = await analyseMenu(base64);
       lastMenuText = menuText;
+      localStorage.setItem('lacarta_last_menu', menuText);
+      updatePreviousMenuBtn();
       const p = getProfile();
       const langTo = LANG_NAMES[p.language] || 'British English';
       logEvent('menu_scan', { success: true, language: langFrom + ' → ' + langTo });
@@ -1594,6 +1634,10 @@ Use ## markdown headings for all section headings and course categories — for 
 
   function closeModal() {
     document.getElementById('image-modal').classList.remove('visible');
+    // Ensure the correct screen is still showing behind the modal
+    if (currentScreen) {
+      document.getElementById(currentScreen).style.display = 'flex';
+    }
   }
 
   document.getElementById('image-modal').addEventListener('click', function(e) {
