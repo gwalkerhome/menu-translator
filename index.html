@@ -1808,6 +1808,11 @@ Use ## markdown headings for all section headings and course categories — for 
   document.getElementById('image-modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
+
+  // ── SERVICE WORKER (enables Android home screen install) ─────────────
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
 </script>
 
 </body>
