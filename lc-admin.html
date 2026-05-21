@@ -401,89 +401,6 @@
 
   .user-version-select option { background: #2A1208; color: var(--cream); }
 
-  /* ── GUEST PIN CARD ── */
-  .pin-manage-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(212,168,67,0.2);
-    border-radius: 14px;
-    padding: 22px;
-  }
-
-  .pin-status-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-
-  .pin-status-label {
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .pin-status-value {
-    font-size: 15px;
-    color: var(--cream);
-    font-weight: 700;
-  }
-
-  .status-badge {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-  }
-
-  .status-badge.active {
-    background: rgba(80,180,80,0.15);
-    border: 1px solid rgba(80,180,80,0.4);
-    color: #90e890;
-  }
-
-  .status-badge.inactive {
-    background: rgba(200,71,46,0.12);
-    border: 1px solid rgba(200,71,46,0.3);
-    color: #f5bdb5;
-  }
-
-  .admin-input {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1px solid rgba(212,168,67,0.25);
-    border-radius: 10px;
-    font-family: 'Lato', sans-serif;
-    font-size: 14px;
-    color: var(--cream);
-    background: rgba(255,255,255,0.05);
-    margin-bottom: 12px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .admin-input:focus { border-color: var(--gold); }
-
-  .admin-label {
-    display: block;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .toggle-label { font-size: 14px; color: var(--cream-soft); }
-
   .toggle {
     position: relative;
     width: 46px;
@@ -516,32 +433,6 @@
   }
 
   .toggle input:checked ~ .toggle-thumb { transform: translateX(20px); background: #90e890; }
-
-  .save-btn {
-    width: 100%;
-    padding: 13px;
-    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
-    color: var(--cream);
-    border: none;
-    border-radius: 10px;
-    font-family: 'Lato', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(200,71,46,0.4);
-    transition: opacity 0.15s;
-    margin-top: 4px;
-  }
-
-  .save-btn:active { opacity: 0.85; }
-
-  .save-feedback {
-    text-align: center;
-    font-size: 13px;
-    color: #90e890;
-    margin-top: 10px;
-    min-height: 18px;
-  }
 
   /* ── USER ACTIVITY TABLE ── */
   .user-table {
@@ -674,6 +565,19 @@
   .mode-name { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
   .mode-count { font-size: 12px; color: var(--muted); }
 
+  /* ── SCROLL BOX ── */
+  .scroll-box {
+    max-height: 320px;
+    overflow-y: auto;
+    border: 1px solid rgba(212,168,67,0.1);
+    border-radius: 12px;
+    padding: 8px 12px;
+  }
+
+  .scroll-box::-webkit-scrollbar { width: 4px; }
+  .scroll-box::-webkit-scrollbar-track { background: transparent; }
+  .scroll-box::-webkit-scrollbar-thumb { background: rgba(212,168,67,0.2); border-radius: 2px; }
+
   .loading-msg { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
 
   .error-box {
@@ -722,68 +626,30 @@
     <div class="section">
       <div class="section-title">User Management</div>
       <button class="add-user-btn" onclick="openAddUser()">＋ Add User</button>
-      <div id="user-management-list"><div class="loading-msg">Loading…</div></div>
-    </div>
-
-    <!-- Guest PIN Management -->
-    <div class="section">
-      <div class="section-title">Guest Access</div>
-      <div class="pin-manage-card">
-        <div class="pin-status-row">
-          <div>
-            <div class="pin-status-label">Current guest PIN</div>
-            <div class="pin-status-value" id="current-guest-pin">—</div>
-          </div>
-          <div id="guest-status-badge" class="status-badge inactive">Inactive</div>
-        </div>
-        <div class="pin-status-row" style="margin-bottom:20px;">
-          <div>
-            <div class="pin-status-label">Expires</div>
-            <div class="pin-status-value" id="current-expiry">—</div>
-          </div>
-        </div>
-
-        <label class="admin-label">New guest PIN</label>
-        <input class="admin-input" type="text" id="new-guest-pin" placeholder="e.g. 7823" inputmode="numeric" maxlength="8">
-
-        <label class="admin-label">Expiry date</label>
-        <input class="admin-input" type="date" id="new-expiry">
-
-        <div class="toggle-row">
-          <label class="toggle">
-            <input type="checkbox" id="guest-active-toggle">
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-          <span class="toggle-label">Guest access active</span>
-        </div>
-
-        <button class="save-btn" onclick="saveGuestConfig()">Save changes</button>
-        <div class="save-feedback" id="save-feedback"></div>
-      </div>
+      <div id="user-management-list" class="scroll-box"><div class="loading-msg">Loading…</div></div>
     </div>
 
     <!-- Per-User Activity Summary -->
     <div class="section">
       <div class="section-title">Activity by User</div>
-      <div id="user-table-wrap"><div class="loading-msg">Loading…</div></div>
+      <div id="user-table-wrap" class="scroll-box"><div class="loading-msg">Loading…</div></div>
     </div>
 
     <!-- Recent Activity -->
     <div class="section">
       <div class="section-title">Recent Activity</div>
-      <div id="activity-feed"><div class="loading-msg">Loading…</div></div>
+      <div id="activity-feed" class="scroll-box"><div class="loading-msg">Loading…</div></div>
     </div>
 
     <!-- Language Breakdown -->
     <div class="section">
       <div class="section-title">Menu Languages Scanned</div>
-      <div id="lang-chart"><div class="loading-msg">Loading…</div></div>
+      <div id="lang-chart" class="scroll-box"><div class="loading-msg">Loading…</div></div>
     </div>
 
-    <!-- Image Mode Usage -->
+    <!-- Version B vs C Usage -->
     <div class="section">
-      <div class="section-title">Image Mode Usage</div>
+      <div class="section-title">Version B vs C — Image Usage</div>
       <div id="mode-chart"><div class="loading-msg">Loading…</div></div>
     </div>
 
@@ -885,8 +751,6 @@
       const usersJson  = await usersRes.json();
 
       if (configData.error) throw new Error(configData.error);
-
-      populateGuestForm(configData.config);
 
       const rows = configData.events || [];
       eventsData = rows.filter(r => r[0] !== 'Timestamp' && r[0] !== '' && r[0]);
@@ -1010,64 +874,6 @@
 
   function finishAddUser() {
     closeAddUser();
-  }
-
-  // ── GUEST FORM ────────────────────────────────────────────────────────
-  function populateGuestForm(config) {
-    if (!config) return;
-    document.getElementById('current-guest-pin').textContent = config.guest_pin || '—';
-    document.getElementById('current-expiry').textContent    = config.guest_pin_expiry || '—';
-    document.getElementById('new-expiry').value              = config.guest_pin_expiry || '';
-    document.getElementById('new-guest-pin').value           = config.guest_pin || '';
-
-    const active = config.guest_pin_active.toLowerCase() === 'true';
-    document.getElementById('guest-active-toggle').checked = active;
-
-    const badge = document.getElementById('guest-status-badge');
-    badge.textContent = active ? 'Active' : 'Inactive';
-    badge.className   = 'status-badge ' + (active ? 'active' : 'inactive');
-  }
-
-  async function saveGuestConfig() {
-    const newPin    = document.getElementById('new-guest-pin').value.trim();
-    const newExpiry = document.getElementById('new-expiry').value;
-    const active    = document.getElementById('guest-active-toggle').checked;
-    const fb        = document.getElementById('save-feedback');
-
-    if (!newPin)    { fb.style.color = '#f5bdb5'; fb.textContent = 'Please enter a PIN'; return; }
-    if (!newExpiry) { fb.style.color = '#f5bdb5'; fb.textContent = 'Please set an expiry date'; return; }
-
-    fb.style.color = 'var(--muted)';
-    fb.textContent = 'Saving…';
-
-    try {
-      const res  = await fetch('/api/config', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({
-          action:           'set_config',
-          admin_pin:        storedPin,
-          guest_pin:        newPin,
-          guest_pin_expiry: newExpiry,
-          guest_pin_active: active.toString()
-        })
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-
-      document.getElementById('current-guest-pin').textContent = newPin;
-      document.getElementById('current-expiry').textContent    = newExpiry;
-      const badge = document.getElementById('guest-status-badge');
-      badge.textContent = active ? 'Active' : 'Inactive';
-      badge.className   = 'status-badge ' + (active ? 'active' : 'inactive');
-
-      fb.style.color = '#90e890';
-      fb.textContent = '✓ Saved';
-      setTimeout(() => { fb.textContent = ''; }, 3000);
-    } catch (err) {
-      fb.style.color = '#f5bdb5';
-      fb.textContent = 'Error: ' + err.message;
-    }
   }
 
   // ── RENDER ALL ────────────────────────────────────────────────────────
