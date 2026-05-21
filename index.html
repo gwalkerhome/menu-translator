@@ -213,6 +213,101 @@
     z-index: 0;
   }
 
+  .help-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 2;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(212,168,67,0.06);
+    border: 1px solid rgba(212,168,67,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(212,168,67,0.45);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .help-btn:active {
+    background: rgba(212,168,67,0.12);
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
+  /* ── HELP SCREEN ── */
+  #help-screen {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .help-body {
+    padding: 24px 20px 60px;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .help-section {
+    margin-bottom: 32px;
+  }
+
+  .help-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+  }
+
+  .help-section p {
+    font-size: 14px;
+    color: var(--cream-soft);
+    line-height: 1.75;
+    margin-bottom: 8px;
+  }
+
+  .help-section ol,
+  .help-section ul {
+    padding-left: 20px;
+    margin-top: 4px;
+  }
+
+  .help-section li {
+    font-size: 14px;
+    color: var(--cream-soft);
+    line-height: 1.75;
+    margin-bottom: 4px;
+  }
+
+  .help-section li b {
+    color: var(--cream);
+    font-weight: 700;
+  }
+
+  .help-note {
+    margin-top: 10px;
+    padding: 12px 14px;
+    background: rgba(200,71,46,0.08);
+    border: 1px solid rgba(200,71,46,0.2);
+    border-radius: 10px;
+    font-size: 12px;
+    color: #f5bdb5;
+    line-height: 1.65;
+  }
+
   .profile-corner {
     position: absolute;
     top: 20px;
@@ -1001,6 +1096,7 @@
 
 <!-- ══ HOME SCREEN ══ -->
 <div id="home-screen">
+  <button class="help-btn" onclick="showHelp()" title="Help">?</button>
   <div class="profile-corner">
     <button class="profile-icon-btn" id="profile-icon-btn" onclick="showProfile()" title="Your profile">👤</button>
     <span class="profile-name-label" id="profile-name-label"></span>
@@ -1115,6 +1211,50 @@
 
     <button class="profile-save-btn" onclick="saveProfile()">Save Profile</button>
     <button class="profile-clear-btn" onclick="clearProfile()">Clear profile &amp; use defaults</button>
+  </div>
+</div>
+
+<!-- ══ HELP SCREEN ══ -->
+<div id="help-screen">
+  <div class="screen-header">
+    <h2>How to use La Carta</h2>
+    <button class="back-btn" onclick="show('home-screen')">← Back</button>
+  </div>
+  <div class="help-body">
+
+    <div class="help-section">
+      <div class="help-section-title">What is La Carta?</div>
+      <p>Point your phone at any restaurant menu — in any language — and La Carta translates it instantly, describes every dish in plain English, and helps you decide what to order.</p>
+    </div>
+
+    <div class="help-section">
+      <div class="help-section-title">Scanning a menu</div>
+      <ol>
+        <li>Tap <b>Analyse Menu</b> on the home screen</li>
+        <li>Take a photo of the menu, or choose one from your gallery</li>
+        <li>The app translates every dish and gives you a one-sentence description</li>
+        <li>Tap <b>↩ Previous menu</b> to reload your last scan without taking a new photo</li>
+      </ol>
+      <p style="margin-top:10px; font-size:13px; color:var(--muted);">Good lighting makes a big difference. Try to get the whole menu, or one clear section, in the frame.</p>
+    </div>
+
+    <div class="help-section" id="help-images-section">
+      <div class="help-section-title">Dish images</div>
+      <p>Tap the <b>🔍</b> button next to any dish to see a photo of it.</p>
+    </div>
+
+    <div class="help-section">
+      <div class="help-section-title">Your profile</div>
+      <p>Tap the <b>👤</b> icon (top right) to personalise the app. Everything is optional.</p>
+      <ul>
+        <li><b>Language</b> — get results in your own language rather than English</li>
+        <li><b>Nationality</b> — the app uses food comparisons you'll actually recognise</li>
+        <li><b>Dietary requirements</b> — the app flags any dish that may conflict with your needs</li>
+        <li><b>Food preferences</b> — tell the app what you enjoy and a <em>Recommend something for me</em> button will appear after each scan</li>
+      </ul>
+      <div class="help-note">Dietary flags are based on AI interpretation of menu text only. Always confirm your requirements directly with restaurant staff.</div>
+    </div>
+
   </div>
 </div>
 
@@ -1353,11 +1493,18 @@
 
   // ── NAVIGATION ───────────────────────────────────────────────────────
   function show(id) {
-    ['pin-entry-screen','suspended-screen','home-screen','loading-screen','result-screen','profile-screen'].forEach(s => {
+    ['pin-entry-screen','suspended-screen','home-screen','loading-screen','result-screen','profile-screen','help-screen'].forEach(s => {
       document.getElementById(s).style.display = 'none';
     });
     document.getElementById(id).style.display = 'flex';
     currentScreen = id;
+  }
+
+  function showHelp() {
+    // Hide the dish images section for Version A users
+    const imgSection = document.getElementById('help-images-section');
+    if (imgSection) imgSection.style.display = getImageMode() ? 'block' : 'none';
+    show('help-screen');
   }
 
   function goHome() {
