@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="La Carta">
 <link rel="apple-touch-icon" href="icon.png">
 
-<title>v9 La Carta</title>
+<title>v10 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -66,8 +66,8 @@
     to   { transform: scale(1); opacity: 1; }
   }
 
-  /* ── CONSENT SCREEN ── */
-  #consent-screen {
+  /* ── PIN ENTRY SCREEN ── */
+  #pin-entry-screen {
     display: none;
     flex-direction: column;
     align-items: center;
@@ -81,66 +81,50 @@
     animation: fadeUp 0.7s ease both;
   }
 
-  .consent-card {
+  .pin-entry-card {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(212,168,67,0.2);
     border-radius: 20px;
     padding: 36px 28px;
-    max-width: 400px;
+    max-width: 380px;
     width: 100%;
     box-shadow: var(--shadow-lg);
   }
 
-  .consent-card h2 {
+  .pin-entry-card h2 {
     font-family: 'Playfair Display', serif;
     font-size: 24px;
     font-weight: 700;
     color: var(--cream);
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 
-  .consent-card p {
+  .pin-entry-card p {
     font-size: 14px;
     color: var(--muted);
     line-height: 1.75;
     margin-bottom: 28px;
   }
 
-  .consent-divider {
-    border: none;
-    border-top: 1px solid rgba(212,168,67,0.15);
-    margin: 24px 0;
-  }
-
-  .consent-name-label {
-    display: block;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    text-align: left;
-  }
-
-  .consent-input {
+  .pin-entry-input {
     width: 100%;
     padding: 14px 16px;
     border: 1px solid rgba(212,168,67,0.25);
     border-radius: 12px;
     font-family: 'Lato', sans-serif;
-    font-size: 15px;
+    font-size: 28px;
+    letter-spacing: 10px;
+    text-align: center;
     color: var(--cream);
     background: rgba(255,255,255,0.05);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     outline: none;
     transition: border-color 0.2s;
-    text-align: left;
   }
 
-  .consent-input:focus { border-color: var(--gold); }
-  .consent-input::placeholder { color: var(--muted); }
+  .pin-entry-input:focus { border-color: var(--gold); }
 
-  .consent-btn {
+  .pin-entry-btn {
     width: 100%;
     padding: 16px;
     background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
@@ -155,7 +139,53 @@
     transition: opacity 0.15s;
   }
 
-  .consent-btn:active { opacity: 0.85; }
+  .pin-entry-btn:active { opacity: 0.85; }
+
+  .pin-entry-error {
+    margin-top: 14px;
+    font-size: 13px;
+    color: #f5bdb5;
+    min-height: 18px;
+  }
+
+  /* ── SUSPENDED SCREEN ── */
+  #suspended-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding: 40px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .suspended-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,71,46,0.3);
+    border-radius: 20px;
+    padding: 36px 28px;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .suspended-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+
+  .suspended-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
 
   /* ── HOME SCREEN ── */
   #home-screen {
@@ -182,11 +212,18 @@
     z-index: 0;
   }
 
-  .profile-icon-btn {
+  .profile-corner {
     position: absolute;
     top: 20px;
     right: 20px;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .profile-icon-btn {
     width: 42px;
     height: 42px;
     border-radius: 50%;
@@ -204,6 +241,17 @@
   .profile-icon-btn.has-profile {
     background: rgba(212,168,67,0.15);
     border-color: var(--gold);
+  }
+
+  .profile-name-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-align: center;
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .home-content {
@@ -403,6 +451,17 @@
     width: 100px;
     height: 1px;
     background: linear-gradient(to right, transparent, rgba(212,168,67,0.3), transparent);
+  }
+
+  .version-label {
+    position: absolute;
+    bottom: 14px;
+    right: 18px;
+    font-size: 9px;
+    color: rgba(212,168,67,0.25);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    z-index: 1;
   }
 
   /* ── SHARED HEADER ── */
@@ -911,125 +970,40 @@
   }
 
   .error-box strong { display: block; margin-bottom: 6px; font-size: 15px; color: var(--cream); }
-
-  /* ── PIN MODAL ── */
-  #pin-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    background: rgba(8,3,1,0.93);
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    animation: fadeIn 0.2s ease both;
-  }
-
-  #pin-modal.visible { display: flex; }
-
-  .pin-modal-card {
-    background: var(--bg-mid);
-    border: 1px solid rgba(212,168,67,0.25);
-    border-radius: 20px;
-    padding: 32px 24px;
-    max-width: 320px;
-    width: 100%;
-    text-align: center;
-    box-shadow: var(--shadow-lg);
-    animation: scaleIn 0.2s ease both;
-  }
-
-  .pin-modal-card h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 19px;
-    font-weight: 700;
-    color: var(--cream);
-    margin-bottom: 6px;
-  }
-
-  .pin-modal-card p {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 22px;
-    line-height: 1.6;
-  }
-
-  .pin-modal-input {
-    width: 100%;
-    padding: 13px 16px;
-    border: 1px solid rgba(212,168,67,0.25);
-    border-radius: 12px;
-    font-family: 'Lato', sans-serif;
-    font-size: 22px;
-    letter-spacing: 8px;
-    text-align: center;
-    color: var(--cream);
-    background: rgba(255,255,255,0.05);
-    margin-bottom: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .pin-modal-input:focus { border-color: var(--gold); }
-
-  .pin-modal-btn {
-    width: 100%;
-    padding: 13px;
-    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
-    color: var(--cream);
-    border: none;
-    border-radius: 12px;
-    font-family: 'Lato', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(200,71,46,0.4);
-    margin-bottom: 10px;
-    transition: opacity 0.15s;
-  }
-
-  .pin-modal-btn:active { opacity: 0.85; }
-
-  .pin-modal-cancel {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-family: 'Lato', sans-serif;
-    font-size: 13px;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-
-  .pin-modal-error {
-    font-size: 12px;
-    color: #f5bdb5;
-    margin-bottom: 10px;
-    min-height: 16px;
-  }
 </style>
 
 </head>
 <body>
 
-<!-- ══ CONSENT SCREEN ══ -->
-<div id="consent-screen">
-  <div class="consent-card">
+<!-- ══ PIN ENTRY SCREEN ══ -->
+<div id="pin-entry-screen">
+  <div class="pin-entry-card">
     <div style="font-size:36px; margin-bottom:16px;">🍽️</div>
     <h2>Welcome to La Carta</h2>
-    <p>You are being loaned the use of this app for testing purposes. Some of the data you generate will be used anonymously to support the test and development process. No personal information will be shared.</p>
-    <hr class="consent-divider">
-    <label class="consent-name-label">Your first name</label>
-    <input class="consent-input" type="text" id="consent-name"
-      placeholder="e.g. Phil, Sarah…"
-      autocorrect="off" autocapitalize="words" spellcheck="false"
-      onkeydown="if(event.key==='Enter') acceptConsent()">
-    <button class="consent-btn" onclick="acceptConsent()">Let's go →</button>
+    <p>Enter the access code Gary sent you to get started.</p>
+    <input class="pin-entry-input" type="password" id="pin-entry-input"
+      inputmode="numeric" placeholder="· · · ·" maxlength="4"
+      onkeydown="if(event.key==='Enter') submitAccessPin()">
+    <button class="pin-entry-btn" onclick="submitAccessPin()">Let's go →</button>
+    <p class="pin-entry-error" id="pin-entry-error"></p>
+  </div>
+</div>
+
+<!-- ══ SUSPENDED SCREEN ══ -->
+<div id="suspended-screen">
+  <div class="suspended-card">
+    <div style="font-size:36px; margin-bottom:16px;">🔒</div>
+    <h2>Access Suspended</h2>
+    <p>Your access to La Carta has been suspended.<br><br>Please contact Gary directly if you think this is a mistake.</p>
   </div>
 </div>
 
 <!-- ══ HOME SCREEN ══ -->
 <div id="home-screen">
-  <button class="profile-icon-btn" id="profile-icon-btn" onclick="showProfile()" title="Your profile">👤</button>
+  <div class="profile-corner">
+    <button class="profile-icon-btn" id="profile-icon-btn" onclick="showProfile()" title="Your profile">👤</button>
+    <span class="profile-name-label" id="profile-name-label"></span>
+  </div>
   <div class="home-content">
     <div class="ornament-top">✦</div>
     <div class="brand-mark">🍽️</div>
@@ -1046,6 +1020,7 @@
     <button id="prev-menu-btn" class="prev-menu-btn" onclick="showPreviousMenu()" style="display:none">↩ Previous menu</button>
   </div>
   <div class="ornament-bottom">✦</div>
+  <div class="version-label" id="version-label"></div>
 </div>
 
 <!-- ══ LOADING SCREEN ══ -->
@@ -1137,35 +1112,8 @@
       <p class="profile-hint">These help the app draw comparisons you'll actually recognise.</p>
     </div>
 
-    <div class="profile-section">
-      <div class="profile-section-title">Dish Images</div>
-      <p class="profile-hint" style="margin-bottom: 14px;">
-        Standard uses free stock photos — good quality, no extra cost.<br>
-        Beautiful uses AI generation — stunning but costs a little more per image.
-      </p>
-      <div class="pill-grid">
-        <button class="pill image-mode-pill active" data-mode="pexels" onclick="setImageMode('pexels')">Standard (free)</button>
-        <button class="pill image-mode-pill" data-mode="openai" onclick="requestBeautifulMode()">✦ Beautiful (AI)</button>
-      </div>
-    </div>
-
     <button class="profile-save-btn" onclick="saveProfile()">Save Profile</button>
     <button class="profile-clear-btn" onclick="clearProfile()">Clear profile &amp; use defaults</button>
-  </div>
-</div>
-
-<!-- ══ PIN MODAL ══ -->
-<div id="pin-modal">
-  <div class="pin-modal-card">
-    <div style="font-size:28px; margin-bottom:12px;">✦</div>
-    <h3>Beautiful Mode</h3>
-    <p>AI-generated images require a PIN.<br>Ask Gary if you'd like access.</p>
-    <input class="pin-modal-input" type="password" id="pin-modal-input"
-      inputmode="numeric" placeholder="· · · ·" maxlength="8"
-      onkeydown="if(event.key==='Enter') submitBeautifulPin()">
-    <div class="pin-modal-error" id="pin-modal-error"></div>
-    <button class="pin-modal-btn" onclick="submitBeautifulPin()">Unlock →</button>
-    <button class="pin-modal-cancel" onclick="closePinModal()">Cancel</button>
   </div>
 </div>
 
@@ -1183,38 +1131,94 @@
   let lastMenuText  = '';
   let currentScreen = 'home-screen';
 
-  // ── USER & ANALYTICS ────────────────────────────────────────────────
-  function getUser() {
-    return localStorage.getItem('lacarta_user') || 'anonymous';
+  // ── USER & VERSION ───────────────────────────────────────────────────
+  function getUser()    { return localStorage.getItem('lacarta_user')    || 'anonymous'; }
+  function getVersion() { return localStorage.getItem('lacarta_version') || 'B'; }
+  function getPin()     { return localStorage.getItem('lacarta_pin')     || ''; }
+
+  // Returns the image mode based on the user's version
+  // Version A = no images, Version B = pexels, Version C = openai
+  function getImageMode() {
+    var v = getVersion();
+    if (v === 'C') return 'openai';
+    if (v === 'A') return null;
+    return 'pexels';
   }
 
-  function acceptConsent() {
-    const name = document.getElementById('consent-name').value.trim();
-    if (!name) {
-      document.getElementById('consent-name').focus();
-      document.getElementById('consent-name').style.borderColor = 'var(--terracotta)';
-      return;
+  // ── ACCESS PIN ───────────────────────────────────────────────────────
+  async function submitAccessPin() {
+    const pin   = document.getElementById('pin-entry-input').value.trim();
+    const errEl = document.getElementById('pin-entry-error');
+    if (!pin) return;
+
+    errEl.textContent = 'Checking…';
+
+    try {
+      const res  = await fetch('/api/config', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ action: 'login', pin })
+      });
+      const data = await res.json();
+
+      if (data.valid) {
+        localStorage.setItem('lacarta_pin',     pin);
+        localStorage.setItem('lacarta_user',    data.name);
+        localStorage.setItem('lacarta_version', data.version);
+        errEl.textContent = '';
+        logEvent('app_open');
+        showHome();
+      } else if (data.reason === 'inactive') {
+        showSuspended();
+      } else {
+        errEl.textContent = 'Invalid access code. Please check and try again.';
+        document.getElementById('pin-entry-input').value = '';
+        document.getElementById('pin-entry-input').focus();
+      }
+    } catch (err) {
+      errEl.textContent = 'Connection error. Please try again.';
     }
-    localStorage.setItem('lacarta_user', name);
-    localStorage.setItem('lacarta_consented', '1');
-    logEvent('app_open');
-    show('home-screen');
   }
 
+  // Silent background check on each app open
+  async function checkPinInBackground(pin) {
+    try {
+      const res  = await fetch('/api/config', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ action: 'login', pin })
+      });
+      const data = await res.json();
+      if (!data.valid && data.reason === 'inactive') {
+        showSuspended();
+        return;
+      }
+      if (data.valid) {
+        // Refresh cached name and version in case Gary changed them
+        localStorage.setItem('lacarta_user',    data.name);
+        localStorage.setItem('lacarta_version', data.version);
+        updateHomeLabels();
+      }
+    } catch (err) {
+      // Network failure — use cached data, carry on silently
+    }
+  }
+
+  // ── ANALYTICS ────────────────────────────────────────────────────────
   function logEvent(event, extras) {
-    // Fire and forget — never block the app
     fetch('/api/log', {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user:  getUser(),
+      body:    JSON.stringify({
+        user:    getUser(),
         event,
+        version: getVersion(),
         ...extras
       })
     }).catch(() => {});
   }
 
-  // ── PROFILE ─────────────────────────────────────────────────────────
+  // ── PROFILE ──────────────────────────────────────────────────────────
   const LANG_NAMES = {
     'en-GB': 'British English', 'en-US': 'American English', 'en-AU': 'Australian English',
     'es': 'Spanish', 'fr': 'French', 'de': 'German', 'it': 'Italian',
@@ -1226,24 +1230,16 @@
     catch(e) { return {}; }
   }
 
-  function setImageMode(mode) {
-    document.querySelectorAll('.image-mode-pill').forEach(p => {
-      p.classList.toggle('active', p.dataset.mode === mode);
-    });
-  }
-
   function saveProfile() {
     const dietary     = [...document.querySelectorAll('#dietary-pills .pill.active')].map(p => p.dataset.value);
     const preferences = [...document.querySelectorAll('#preference-pills .pill.active')].map(p => p.dataset.value);
-    const imageModeEl = document.querySelector('.image-mode-pill.active');
 
     const profile = {
       language:    document.getElementById('pref-language').value,
       nationality: document.getElementById('pref-nationality').value.trim(),
       dietary,
       preferences,
-      favourites:  document.getElementById('pref-favourites').value.trim(),
-      imageMode:   imageModeEl ? imageModeEl.dataset.mode : 'pexels'
+      favourites:  document.getElementById('pref-favourites').value.trim()
     };
 
     localStorage.setItem('lacarta_profile', JSON.stringify(profile));
@@ -1253,19 +1249,18 @@
 
   function clearProfile() {
     localStorage.removeItem('lacarta_profile');
-    document.getElementById('pref-language').value = 'en-GB';
+    document.getElementById('pref-language').value    = 'en-GB';
     document.getElementById('pref-nationality').value = '';
-    document.getElementById('pref-favourites').value = '';
+    document.getElementById('pref-favourites').value  = '';
     document.querySelectorAll('.pill.active').forEach(p => p.classList.remove('active'));
-    setImageMode('pexels');
     updateProfileIcon();
   }
 
   function loadProfileIntoForm() {
     const p = getProfile();
-    if (p.language)    document.getElementById('pref-language').value = p.language;
+    if (p.language)    document.getElementById('pref-language').value    = p.language;
     if (p.nationality) document.getElementById('pref-nationality').value = p.nationality;
-    if (p.favourites)  document.getElementById('pref-favourites').value = p.favourites;
+    if (p.favourites)  document.getElementById('pref-favourites').value  = p.favourites;
 
     document.querySelectorAll('#dietary-pills .pill').forEach(pill => {
       pill.classList.toggle('active', (p.dietary || []).includes(pill.dataset.value));
@@ -1273,7 +1268,6 @@
     document.querySelectorAll('#preference-pills .pill').forEach(pill => {
       pill.classList.toggle('active', (p.preferences || []).includes(pill.dataset.value));
     });
-    setImageMode(p.imageMode || 'pexels');
   }
 
   function updateProfileIcon() {
@@ -1310,25 +1304,45 @@
            !!(p.dietary && p.dietary.length) || !!p.nationality;
   }
 
-  // ── PILL TOGGLES ────────────────────────────────────────────────────
+  // ── PILL TOGGLES ─────────────────────────────────────────────────────
   document.querySelectorAll('.pill').forEach(pill => {
     pill.addEventListener('click', () => {
-      if (!pill.classList.contains('image-mode-pill')) {
-        pill.classList.toggle('active');
-      }
+      pill.classList.toggle('active');
     });
   });
 
-  // ── STARTUP ─────────────────────────────────────────────────────────
+  // ── STARTUP ──────────────────────────────────────────────────────────
   function init() {
-    updateProfileIcon();
-    updatePreviousMenuBtn();
-    if (!localStorage.getItem('lacarta_consented')) {
-      show('consent-screen');
-    } else {
+    const pin = getPin();
+    if (pin) {
+      // User has logged in before — show home immediately, check in background
       logEvent('app_open');
-      show('home-screen');
+      showHome();
+      checkPinInBackground(pin);
+    } else {
+      show('pin-entry-screen');
     }
+  }
+
+  function showHome() {
+    updateProfileIcon();
+    updateHomeLabels();
+    updatePreviousMenuBtn();
+    show('home-screen');
+  }
+
+  function showSuspended() {
+    ['pin-entry-screen','home-screen','loading-screen','result-screen','profile-screen','suspended-screen'].forEach(s => {
+      document.getElementById(s).style.display = 'none';
+    });
+    document.getElementById('suspended-screen').style.display = 'flex';
+  }
+
+  function updateHomeLabels() {
+    const nameEl    = document.getElementById('profile-name-label');
+    const versionEl = document.getElementById('version-label');
+    if (nameEl)    nameEl.textContent    = getUser() !== 'anonymous' ? getUser() : '';
+    if (versionEl) versionEl.textContent = 'Version ' + getVersion();
   }
 
   function showProfile() {
@@ -1336,9 +1350,9 @@
     show('profile-screen');
   }
 
-  // ── NAVIGATION ──────────────────────────────────────────────────────
+  // ── NAVIGATION ───────────────────────────────────────────────────────
   function show(id) {
-    ['consent-screen','home-screen','loading-screen','result-screen','profile-screen'].forEach(s => {
+    ['pin-entry-screen','suspended-screen','home-screen','loading-screen','result-screen','profile-screen'].forEach(s => {
       document.getElementById(s).style.display = 'none';
     });
     document.getElementById(id).style.display = 'flex';
@@ -1367,7 +1381,7 @@
 
   init();
 
-  // ── PHOTO HANDLING ───────────────────────────────────────────────────
+  // ── PHOTO HANDLING ────────────────────────────────────────────────────
   async function handlePhoto(input) {
     if (!input.files || !input.files[0]) return;
     const file = input.files[0];
@@ -1378,9 +1392,9 @@
       lastMenuText = menuText;
       localStorage.setItem('lacarta_last_menu', menuText);
       updatePreviousMenuBtn();
-      const p = getProfile();
+      const p      = getProfile();
       const langTo = LANG_NAMES[p.language] || 'British English';
-      logEvent('menu_scan', { success: true, language: langFrom + ' → ' + langTo });
+      logEvent('menu_scan', { success: true, language: langFrom + ' → ' + langTo, imageMode: getImageMode() || 'none' });
       renderResult(menuText);
       show('result-screen');
     } catch (err) {
@@ -1416,7 +1430,7 @@
     });
   }
 
-  // ── ANALYSE MENU ─────────────────────────────────────────────────────
+  // ── ANALYSE MENU ──────────────────────────────────────────────────────
   async function analyseMenu(base64Image) {
     const profileSection = buildProfilePromptSection();
     const prompt = `You are a menu translation and explanation assistant for travellers.
@@ -1436,10 +1450,10 @@ Format every dish name in bold using **dish name** markdown syntax, with its des
 Use ## markdown headings for all section headings and course categories — for example ## Starters, ## Main Courses, ## Desserts, ## Drinks. Never use bold (**) for section headings or category labels — only for actual dish names.${profileSection}`;
 
     const response = await fetch('/api/chat', {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'gpt-4o',
+      body:    JSON.stringify({
+        model:    'gpt-4o',
         messages: [{ role: 'user', content: [
           { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } },
           { type: 'text', text: prompt }
@@ -1453,9 +1467,7 @@ Use ## markdown headings for all section headings and course categories — for 
       throw new Error(err.error?.message || `API error ${response.status}`);
     }
 
-    const raw = (await response.json()).choices[0].message.content;
-
-    // Extract the LANG: marker from the first line, then strip it
+    const raw       = (await response.json()).choices[0].message.content;
     const langMatch = raw.match(/^LANG:(.+)/i);
     const langFrom  = langMatch ? langMatch[1].trim() : 'unknown';
     const text      = raw.replace(/^LANG:.+\n?/i, '').trimStart();
@@ -1463,9 +1475,10 @@ Use ## markdown headings for all section headings and course categories — for 
     return { text, langFrom };
   }
 
-  // ── RENDER RESULT ────────────────────────────────────────────────────
+  // ── RENDER RESULT ─────────────────────────────────────────────────────
   function renderResult(text) {
-    const lines = text.split('\n');
+    const lines    = text.split('\n');
+    const showImgs = getImageMode() !== null;
     let html = '';
 
     for (let line of lines) {
@@ -1481,13 +1494,17 @@ Use ## markdown headings for all section headings and course categories — for 
       } else {
         const boldMatch = line.match(/\*\*(.*?)\*\*/);
         if (boldMatch) {
-          const dishName = boldMatch[1];
+          const dishName  = boldMatch[1];
           const formatted = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-          html += `
-            <div class="dish-row">
-              <div class="dish-text">${formatted}</div>
-              <button class="img-btn" onclick="showDishImage('${escapeDishName(dishName)}')">🔍</button>
-            </div>`;
+          if (showImgs) {
+            html += `
+              <div class="dish-row">
+                <div class="dish-text">${formatted}</div>
+                <button class="img-btn" onclick="showDishImage('${escapeDishName(dishName)}')">🔍</button>
+              </div>`;
+          } else {
+            html += `<div class="dish-text" style="margin-bottom:4px;">${formatted}</div>`;
+          }
         } else {
           html += `<p>${line}</p>`;
         }
@@ -1521,15 +1538,15 @@ Use ## markdown headings for all section headings and course categories — for 
     return name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
   }
 
-  // ── RECOMMENDATION ───────────────────────────────────────────────────
+  // ── RECOMMENDATION ────────────────────────────────────────────────────
   async function getRecommendation() {
     const btn  = document.getElementById('recommend-btn');
     const card = document.getElementById('recommend-card');
     if (!btn || !card) return;
 
-    btn.disabled = true;
+    btn.disabled      = true;
     btn.style.opacity = '0.5';
-    card.innerHTML = '<div class="recommend-spinner"></div>';
+    card.innerHTML    = '<div class="recommend-spinner"></div>';
 
     try {
       const p = getProfile();
@@ -1540,10 +1557,10 @@ Use ## markdown headings for all section headings and course categories — for 
       if (p.favourites)                          profileDesc.push(`Favourite dishes: ${p.favourites}.`);
 
       const response = await fetch('/api/chat', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'gpt-4o',
+        body:    JSON.stringify({
+          model:    'gpt-4o',
           messages: [{ role: 'user', content:
             `Here is a translated menu:\n\n${lastMenuText}\n\n` +
             `About this person: ${profileDesc.join(' ')}\n\n` +
@@ -1574,17 +1591,18 @@ Use ## markdown headings for all section headings and course categories — for 
     } catch (err) {
       logEvent('recommendation', { success: false });
       card.innerHTML = `<div class="error-box"><strong>Couldn't get a recommendation</strong>${err.message}</div>`;
-      btn.disabled = false;
+      btn.disabled      = false;
       btn.style.opacity = '1';
     }
   }
 
-  // ── DISH IMAGE MODAL ─────────────────────────────────────────────────
+  // ── DISH IMAGE MODAL ──────────────────────────────────────────────────
   async function showDishImage(dishName) {
     const modal   = document.getElementById('image-modal');
     const content = document.getElementById('modal-content');
-    const p       = getProfile();
-    const mode    = p.imageMode || 'pexels';
+    const mode    = getImageMode();
+
+    if (!mode) return;
 
     content.innerHTML = `
       <div class="modal-loading">
@@ -1610,19 +1628,19 @@ Use ## markdown headings for all section headings and course categories — for 
   async function generateDishImage(dishName, mode) {
     if (mode === 'pexels') {
       const response = await fetch('/api/image', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'pexels', query: dishName })
+        body:    JSON.stringify({ mode: 'pexels', query: dishName })
       });
       const data = await response.json();
       if (!response.ok || !data.url) throw new Error(data.error || 'No image found for this dish');
       return data.url;
     } else {
       const response = await fetch('/api/image', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mode: 'openai',
+        body:    JSON.stringify({
+          mode:   'openai',
           prompt: `A realistic food photograph of ${dishName} as it would typically be served in a casual everyday Mediterranean restaurant. Simple, honest plating on a plain ceramic plate. Natural light. Not fine dining, not styled — just good, honest food as a tourist would actually receive it.`
         })
       });
@@ -1634,7 +1652,6 @@ Use ## markdown headings for all section headings and course categories — for 
 
   function closeModal() {
     document.getElementById('image-modal').classList.remove('visible');
-    // Ensure the correct screen is still showing behind the modal
     if (currentScreen) {
       document.getElementById(currentScreen).style.display = 'flex';
     }
@@ -1642,64 +1659,6 @@ Use ## markdown headings for all section headings and course categories — for 
 
   document.getElementById('image-modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
-  });
-
-  // ── BEAUTIFUL MODE PIN ────────────────────────────────────────────────
-  function requestBeautifulMode() {
-    // If already verified this session, just switch
-    if (sessionStorage.getItem('lacarta_pin_ok') === 'true') {
-      setImageMode('openai');
-      return;
-    }
-    // If Beautiful is already the saved mode (returning user), allow freely
-    const p = getProfile();
-    if (p.imageMode === 'openai') {
-      setImageMode('openai');
-      return;
-    }
-    // Otherwise show PIN modal
-    document.getElementById('pin-modal-input').value = '';
-    document.getElementById('pin-modal-error').textContent = '';
-    document.getElementById('pin-modal').classList.add('visible');
-    setTimeout(() => document.getElementById('pin-modal-input').focus(), 100);
-  }
-
-  async function submitBeautifulPin() {
-    const pin  = document.getElementById('pin-modal-input').value.trim();
-    const errEl = document.getElementById('pin-modal-error');
-    if (!pin) return;
-
-    errEl.textContent = 'Checking…';
-
-    try {
-      const res = await fetch('/api/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verify', pin })
-      });
-      const data = await res.json();
-
-      if (data.valid) {
-        sessionStorage.setItem('lacarta_pin_ok', 'true');
-        closePinModal();
-        setImageMode('openai');
-      } else {
-        const reason = data.reason === 'expired' ? 'That PIN has expired' : 'Incorrect PIN';
-        errEl.textContent = reason;
-        document.getElementById('pin-modal-input').value = '';
-        document.getElementById('pin-modal-input').focus();
-      }
-    } catch (err) {
-      errEl.textContent = 'Connection error. Try again.';
-    }
-  }
-
-  function closePinModal() {
-    document.getElementById('pin-modal').classList.remove('visible');
-  }
-
-  document.getElementById('pin-modal').addEventListener('click', function(e) {
-    if (e.target === this) closePinModal();
   });
 </script>
 

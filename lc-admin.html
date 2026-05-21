@@ -184,9 +184,7 @@
   }
 
   /* ── SECTION ── */
-  .section {
-    margin-bottom: 36px;
-  }
+  .section { margin-bottom: 36px; }
 
   .section-title {
     font-family: 'Playfair Display', serif;
@@ -197,6 +195,211 @@
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(212,168,67,0.2);
   }
+
+  /* ── USER MANAGEMENT ── */
+  .add-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: none;
+    border: 1px solid rgba(212,168,67,0.35);
+    border-radius: 10px;
+    color: var(--gold);
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .add-user-btn:hover { background: rgba(212,168,67,0.07); }
+
+  /* Add user modal */
+  #add-user-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(8,3,1,0.93);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  #add-user-modal.visible { display: flex; }
+
+  .add-user-card {
+    background: var(--bg-mid);
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 20px;
+    padding: 32px 24px;
+    max-width: 340px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .add-user-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 20px;
+  }
+
+  .add-user-card .admin-label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .add-user-card .admin-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .add-user-card .admin-input:focus { border-color: var(--gold); }
+
+  .version-select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 20px;
+    outline: none;
+    -webkit-appearance: none;
+    transition: border-color 0.2s;
+  }
+
+  .version-select:focus { border-color: var(--gold); }
+  .version-select option { background: #2A1208; color: var(--cream); }
+
+  .modal-btn-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .modal-confirm-btn {
+    flex: 1;
+    padding: 13px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(200,71,46,0.4);
+    transition: opacity 0.15s;
+  }
+
+  .modal-confirm-btn:active { opacity: 0.85; }
+
+  .modal-cancel-btn {
+    padding: 13px 18px;
+    background: none;
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* New user result */
+  .new-user-result {
+    margin-top: 20px;
+    padding: 18px;
+    background: rgba(80,180,80,0.08);
+    border: 1px solid rgba(80,180,80,0.3);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .new-user-result .pin-display {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #90e890;
+    letter-spacing: 8px;
+    margin: 10px 0 6px;
+  }
+
+  .new-user-result p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .new-user-result .name-display {
+    font-size: 15px;
+    color: var(--cream);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  /* User rows */
+  .user-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(212,168,67,0.1);
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+
+  .user-row-name {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  .user-row-pin {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    min-width: 44px;
+    text-align: center;
+  }
+
+  .user-version-select {
+    padding: 5px 10px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(255,255,255,0.04);
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .user-version-select option { background: #2A1208; color: var(--cream); }
 
   /* ── GUEST PIN CARD ── */
   .pin-manage-card {
@@ -279,10 +482,7 @@
     margin-bottom: 16px;
   }
 
-  .toggle-label {
-    font-size: 14px;
-    color: var(--cream-soft);
-  }
+  .toggle-label { font-size: 14px; color: var(--cream-soft); }
 
   .toggle {
     position: relative;
@@ -343,7 +543,7 @@
     min-height: 18px;
   }
 
-  /* ── USER TABLE ── */
+  /* ── USER ACTIVITY TABLE ── */
   .user-table {
     width: 100%;
     border-collapse: collapse;
@@ -366,10 +566,7 @@
     border-bottom: 1px solid rgba(255,255,255,0.04);
   }
 
-  .user-table td:first-child {
-    font-weight: 700;
-    color: var(--cream);
-  }
+  .user-table td:first-child { font-weight: 700; color: var(--cream); }
 
   .user-table td.num {
     text-align: center;
@@ -420,10 +617,10 @@
     margin-right: 6px;
   }
 
-  .chip-scan    { background: rgba(212,168,67,0.15); color: var(--gold); }
-  .chip-image   { background: rgba(80,120,200,0.15); color: #a0c0f8; }
-  .chip-rec     { background: rgba(120,200,120,0.15); color: #90e890; }
-  .chip-open    { background: rgba(255,255,255,0.06); color: var(--muted); }
+  .chip-scan  { background: rgba(212,168,67,0.15); color: var(--gold); }
+  .chip-image { background: rgba(80,120,200,0.15); color: #a0c0f8; }
+  .chip-rec   { background: rgba(120,200,120,0.15); color: #90e890; }
+  .chip-open  { background: rgba(255,255,255,0.06); color: var(--muted); }
 
   /* ── BAR CHART ── */
   .bar-row {
@@ -433,11 +630,7 @@
     margin-bottom: 10px;
   }
 
-  .bar-label {
-    font-size: 13px;
-    color: var(--cream-soft);
-    min-width: 140px;
-  }
+  .bar-label { font-size: 13px; color: var(--cream-soft); min-width: 140px; }
 
   .bar-track {
     flex: 1;
@@ -454,19 +647,10 @@
     transition: width 0.6s ease;
   }
 
-  .bar-count {
-    font-size: 12px;
-    color: var(--muted);
-    min-width: 28px;
-    text-align: right;
-  }
+  .bar-count { font-size: 12px; color: var(--muted); min-width: 28px; text-align: right; }
 
   /* ── MODE SPLIT ── */
-  .mode-split {
-    display: flex;
-    gap: 16px;
-    align-items: stretch;
-  }
+  .mode-split { display: flex; gap: 16px; align-items: stretch; }
 
   .mode-card {
     flex: 1;
@@ -484,25 +668,13 @@
     margin-bottom: 4px;
   }
 
-  .mode-pct.standard { color: var(--gold-soft); }
+  .mode-pct.standard  { color: var(--gold-soft); }
   .mode-pct.beautiful { color: #a0c0f8; }
 
-  .mode-name {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
+  .mode-name { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
   .mode-count { font-size: 12px; color: var(--muted); }
 
-  .loading-msg {
-    text-align: center;
-    padding: 40px;
-    color: var(--muted);
-    font-size: 14px;
-  }
+  .loading-msg { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
 
   .error-box {
     background: rgba(200,71,46,0.14);
@@ -539,11 +711,18 @@
   <div class="dash-body">
 
     <!-- Stat Cards -->
-    <div class="stat-grid" id="stat-grid">
+    <div class="stat-grid">
       <div class="stat-card"><div class="stat-value" id="stat-scans">—</div><div class="stat-label">Menu Scans</div></div>
       <div class="stat-card"><div class="stat-value" id="stat-users">—</div><div class="stat-label">Users</div></div>
       <div class="stat-card"><div class="stat-value" id="stat-images">—</div><div class="stat-label">Images Viewed</div></div>
       <div class="stat-card"><div class="stat-value" id="stat-recs">—</div><div class="stat-label">Recommendations</div></div>
+    </div>
+
+    <!-- User Management -->
+    <div class="section">
+      <div class="section-title">User Management</div>
+      <button class="add-user-btn" onclick="openAddUser()">＋ Add User</button>
+      <div id="user-management-list"><div class="loading-msg">Loading…</div></div>
     </div>
 
     <!-- Guest PIN Management -->
@@ -584,9 +763,9 @@
       </div>
     </div>
 
-    <!-- Per-User Summary -->
+    <!-- Per-User Activity Summary -->
     <div class="section">
-      <div class="section-title">By User</div>
+      <div class="section-title">Activity by User</div>
       <div id="user-table-wrap"><div class="loading-msg">Loading…</div></div>
     </div>
 
@@ -611,30 +790,56 @@
   </div>
 </div>
 
-<script>
-  let storedPin = '';
-  let eventsData = [];
+<!-- ══ ADD USER MODAL ══ -->
+<div id="add-user-modal">
+  <div class="add-user-card">
+    <h3>Add New User</h3>
+    <div id="add-user-form">
+      <label class="admin-label">Their first name</label>
+      <input class="admin-input" type="text" id="new-user-name"
+        placeholder="e.g. Billy"
+        autocorrect="off" autocapitalize="words" spellcheck="false"
+        onkeydown="if(event.key==='Enter') confirmAddUser()">
+      <label class="admin-label">Version</label>
+      <select class="version-select" id="new-user-version">
+        <option value="A">Version A — No images</option>
+        <option value="B" selected>Version B — Standard photos</option>
+        <option value="C">Version C — AI Beautiful images</option>
+      </select>
+      <div class="modal-btn-row">
+        <button class="modal-confirm-btn" onclick="confirmAddUser()">Generate PIN →</button>
+        <button class="modal-cancel-btn" onclick="closeAddUser()">Cancel</button>
+      </div>
+    </div>
+    <div id="add-user-result" style="display:none;"></div>
+  </div>
+</div>
 
-  // ── PIN ENTRY ────────────────────────────────────────────────────────
+<script>
+  let storedPin  = '';
+  let eventsData = [];
+  let usersData  = [];
+
+  // ── PIN ENTRY ─────────────────────────────────────────────────────────
   async function submitPin() {
-    const pin = document.getElementById('pin-input').value.trim();
+    const pin   = document.getElementById('pin-input').value.trim();
     const errEl = document.getElementById('pin-error');
     if (!pin) return;
 
     errEl.textContent = 'Checking…';
 
     try {
-      const res = await fetch('/api/config', {
-        method: 'POST',
+      const res  = await fetch('/api/config', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verify', pin })
+        body:    JSON.stringify({ action: 'verify', pin })
       });
       const data = await res.json();
 
       if (data.valid && data.role === 'admin') {
         storedPin = pin;
         errEl.textContent = '';
-        document.getElementById('pin-screen').style.display = 'none';
+        document.getElementById('pin-screen').style.display    = 'none';
         document.getElementById('dashboard').style.display = 'block';
         loadDashboard();
       } else {
@@ -651,41 +856,163 @@
   });
 
   function logout() {
-    storedPin = '';
+    storedPin  = '';
     eventsData = [];
-    document.getElementById('dashboard').style.display = 'none';
+    usersData  = [];
+    document.getElementById('dashboard').style.display  = 'none';
     document.getElementById('pin-screen').style.display = 'flex';
-    document.getElementById('pin-input').value = '';
-    document.getElementById('pin-error').textContent = '';
+    document.getElementById('pin-input').value          = '';
+    document.getElementById('pin-error').textContent    = '';
   }
 
-  // ── LOAD DASHBOARD ───────────────────────────────────────────────────
+  // ── LOAD DASHBOARD ────────────────────────────────────────────────────
   async function loadDashboard() {
     try {
-      const res = await fetch('/api/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'admin_data', pin: storedPin })
-      });
-      const data = await res.json();
+      const [configRes, usersRes] = await Promise.all([
+        fetch('/api/config', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ action: 'admin_data', pin: storedPin })
+        }),
+        fetch('/api/config', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ action: 'get_users', pin: storedPin })
+        })
+      ]);
 
-      if (data.error) throw new Error(data.error);
+      const configData = await configRes.json();
+      const usersJson  = await usersRes.json();
 
-      // Populate guest PIN form
-      populateGuestForm(data.config);
+      if (configData.error) throw new Error(configData.error);
 
-      // Process events (first row may be headers)
-      const rows = data.events || [];
+      populateGuestForm(configData.config);
+
+      const rows = configData.events || [];
       eventsData = rows.filter(r => r[0] !== 'Timestamp' && r[0] !== '' && r[0]);
+
+      usersData = usersJson.users || [];
+      renderUserManagement();
       renderAll();
 
     } catch (err) {
-      document.getElementById('user-table-wrap').innerHTML =
+      document.getElementById('user-management-list').innerHTML =
         `<div class="error-box">Failed to load data: ${err.message}</div>`;
     }
   }
 
-  // ── GUEST FORM ───────────────────────────────────────────────────────
+  // ── USER MANAGEMENT ───────────────────────────────────────────────────
+  function renderUserManagement() {
+    const wrap = document.getElementById('user-management-list');
+    if (!usersData.length) {
+      wrap.innerHTML = '<p style="color:var(--muted);font-size:14px;">No users yet. Add your first user above.</p>';
+      return;
+    }
+
+    let html = '';
+    usersData.forEach((user, idx) => {
+      const activeChecked = user.active ? 'checked' : '';
+      html += `
+        <div class="user-row">
+          <div class="user-row-name">${user.name}</div>
+          <div class="user-row-pin">${user.pin}</div>
+          <select class="user-version-select" onchange="updateUserVersion('${user.pin}', this.value)">
+            <option value="A" ${user.version === 'A' ? 'selected' : ''}>Ver A</option>
+            <option value="B" ${user.version === 'B' ? 'selected' : ''}>Ver B</option>
+            <option value="C" ${user.version === 'C' ? 'selected' : ''}>Ver C</option>
+          </select>
+          <label class="toggle" title="${user.active ? 'Active — click to suspend' : 'Suspended — click to activate'}">
+            <input type="checkbox" ${activeChecked} onchange="updateUserActive('${user.pin}', this.checked)">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>`;
+    });
+    wrap.innerHTML = html;
+  }
+
+  async function updateUserVersion(pin, version) {
+    try {
+      await fetch('/api/config', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ action: 'set_user', admin_pin: storedPin, pin, version })
+      });
+    } catch (err) {
+      alert('Failed to update version: ' + err.message);
+    }
+  }
+
+  async function updateUserActive(pin, active) {
+    try {
+      await fetch('/api/config', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ action: 'set_user', admin_pin: storedPin, pin, active })
+      });
+    } catch (err) {
+      alert('Failed to update access: ' + err.message);
+    }
+  }
+
+  // ── ADD USER MODAL ────────────────────────────────────────────────────
+  function openAddUser() {
+    document.getElementById('new-user-name').value   = '';
+    document.getElementById('new-user-version').value = 'B';
+    document.getElementById('add-user-form').style.display   = 'block';
+    document.getElementById('add-user-result').style.display = 'none';
+    document.getElementById('add-user-modal').classList.add('visible');
+    setTimeout(() => document.getElementById('new-user-name').focus(), 100);
+  }
+
+  function closeAddUser() {
+    document.getElementById('add-user-modal').classList.remove('visible');
+  }
+
+  async function confirmAddUser() {
+    const name    = document.getElementById('new-user-name').value.trim();
+    const version = document.getElementById('new-user-version').value;
+    if (!name) {
+      document.getElementById('new-user-name').focus();
+      return;
+    }
+
+    try {
+      const res  = await fetch('/api/config', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ action: 'add_user', admin_pin: storedPin, name, version })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      // Show the generated PIN
+      document.getElementById('add-user-form').style.display   = 'none';
+      document.getElementById('add-user-result').style.display = 'block';
+      document.getElementById('add-user-result').innerHTML = `
+        <div class="new-user-result">
+          <div class="name-display">${data.name} · Version ${data.version}</div>
+          <div class="pin-display">${data.pin}</div>
+          <p>Send this PIN to ${data.name} on WhatsApp.<br>They enter it when they first open the app.</p>
+        </div>
+        <div style="margin-top:16px;">
+          <button class="modal-confirm-btn" onclick="finishAddUser()">Done</button>
+        </div>`;
+
+      // Add to local list and re-render
+      usersData.push({ name: data.name, pin: data.pin, version: data.version, active: true });
+      renderUserManagement();
+
+    } catch (err) {
+      alert('Failed to add user: ' + err.message);
+    }
+  }
+
+  function finishAddUser() {
+    closeAddUser();
+  }
+
+  // ── GUEST FORM ────────────────────────────────────────────────────────
   function populateGuestForm(config) {
     if (!config) return;
     document.getElementById('current-guest-pin').textContent = config.guest_pin || '—';
@@ -698,7 +1025,7 @@
 
     const badge = document.getElementById('guest-status-badge');
     badge.textContent = active ? 'Active' : 'Inactive';
-    badge.className = 'status-badge ' + (active ? 'active' : 'inactive');
+    badge.className   = 'status-badge ' + (active ? 'active' : 'inactive');
   }
 
   async function saveGuestConfig() {
@@ -707,20 +1034,20 @@
     const active    = document.getElementById('guest-active-toggle').checked;
     const fb        = document.getElementById('save-feedback');
 
-    if (!newPin) { fb.style.color = '#f5bdb5'; fb.textContent = 'Please enter a PIN'; return; }
+    if (!newPin)    { fb.style.color = '#f5bdb5'; fb.textContent = 'Please enter a PIN'; return; }
     if (!newExpiry) { fb.style.color = '#f5bdb5'; fb.textContent = 'Please set an expiry date'; return; }
 
     fb.style.color = 'var(--muted)';
     fb.textContent = 'Saving…';
 
     try {
-      const res = await fetch('/api/config', {
-        method: 'POST',
+      const res  = await fetch('/api/config', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'set_config',
-          admin_pin: storedPin,
-          guest_pin: newPin,
+        body:    JSON.stringify({
+          action:           'set_config',
+          admin_pin:        storedPin,
+          guest_pin:        newPin,
           guest_pin_expiry: newExpiry,
           guest_pin_active: active.toString()
         })
@@ -743,19 +1070,19 @@
     }
   }
 
-  // ── RENDER ALL ───────────────────────────────────────────────────────
+  // ── RENDER ALL ────────────────────────────────────────────────────────
   function renderAll() {
     renderStats();
-    renderUserTable();
+    renderUserActivityTable();
     renderActivity();
     renderLanguages();
     renderModes();
   }
 
-  // ── STATS ────────────────────────────────────────────────────────────
+  // ── STATS ─────────────────────────────────────────────────────────────
   function renderStats() {
-    const scans  = eventsData.filter(r => r[2] === 'menu_scan' && r[6] !== 'false').length;
-    const images = eventsData.filter(r => r[2] === 'image_view' && r[6] !== 'false').length;
+    const scans  = eventsData.filter(r => r[2] === 'menu_scan'      && r[6] !== 'false').length;
+    const images = eventsData.filter(r => r[2] === 'image_view'     && r[6] !== 'false').length;
     const recs   = eventsData.filter(r => r[2] === 'recommendation' && r[6] !== 'false').length;
     const users  = new Set(eventsData.map(r => r[1]).filter(u => u && u !== 'anonymous')).size;
 
@@ -765,15 +1092,15 @@
     document.getElementById('stat-recs').textContent   = recs;
   }
 
-  // ── USER TABLE ───────────────────────────────────────────────────────
-  function renderUserTable() {
+  // ── USER ACTIVITY TABLE ───────────────────────────────────────────────
+  function renderUserActivityTable() {
     const byUser = {};
     eventsData.forEach(r => {
       const user = r[1] || 'anonymous';
       if (!byUser[user]) byUser[user] = { scans: 0, images: 0, recs: 0 };
-      if (r[2] === 'menu_scan' && r[6] !== 'false')         byUser[user].scans++;
-      if (r[2] === 'image_view' && r[6] !== 'false')        byUser[user].images++;
-      if (r[2] === 'recommendation' && r[6] !== 'false')    byUser[user].recs++;
+      if (r[2] === 'menu_scan'      && r[6] !== 'false') byUser[user].scans++;
+      if (r[2] === 'image_view'     && r[6] !== 'false') byUser[user].images++;
+      if (r[2] === 'recommendation' && r[6] !== 'false') byUser[user].recs++;
     });
 
     const sorted = Object.entries(byUser).sort((a, b) => b[1].scans - a[1].scans);
@@ -797,7 +1124,7 @@
     document.getElementById('user-table-wrap').innerHTML = html;
   }
 
-  // ── ACTIVITY FEED ────────────────────────────────────────────────────
+  // ── ACTIVITY FEED ─────────────────────────────────────────────────────
   function renderActivity() {
     const recent = [...eventsData].reverse().slice(0, 25);
     if (!recent.length) {
@@ -823,25 +1150,23 @@
       const lang   = r[5] || '';
       const [chipClass, chipLabel] = chipMap[event] || ['chip-open', event];
 
-      let detail_text = detail || lang || '';
       html += `<div class="activity-item">
         <div class="activity-time">${time}</div>
         <div class="activity-user">${user}</div>
         <div class="activity-detail">
           <span class="event-chip ${chipClass}">${chipLabel}</span>
-          ${detail_text}
+          ${detail || lang || ''}
         </div>
       </div>`;
     });
     document.getElementById('activity-feed').innerHTML = html;
   }
 
-  // ── LANGUAGE CHART ───────────────────────────────────────────────────
+  // ── LANGUAGE CHART ────────────────────────────────────────────────────
   function renderLanguages() {
     const langCounts = {};
     eventsData.filter(r => r[2] === 'menu_scan' && r[5]).forEach(r => {
-      const langField = r[5]; // e.g. "Spanish → British English"
-      const fromLang  = langField.split('→')[0].trim() || langField;
+      const fromLang = r[5].split('→')[0].trim() || r[5];
       langCounts[fromLang] = (langCounts[fromLang] || 0) + 1;
     });
 
@@ -864,7 +1189,7 @@
     document.getElementById('lang-chart').innerHTML = html;
   }
 
-  // ── MODE CHART ───────────────────────────────────────────────────────
+  // ── MODE CHART ────────────────────────────────────────────────────────
   function renderModes() {
     const imageEvents = eventsData.filter(r => r[2] === 'image_view' && r[6] !== 'false');
     const standard    = imageEvents.filter(r => r[4] === 'pexels').length;
@@ -876,8 +1201,8 @@
       return;
     }
 
-    const stdPct  = Math.round((standard  / total) * 100);
-    const btyPct  = Math.round((beautiful / total) * 100);
+    const stdPct = Math.round((standard  / total) * 100);
+    const btyPct = Math.round((beautiful / total) * 100);
 
     document.getElementById('mode-chart').innerHTML = `
       <div class="mode-split">
