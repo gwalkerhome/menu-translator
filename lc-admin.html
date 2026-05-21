@@ -326,35 +326,49 @@
 
   /* New user result */
   .new-user-result {
-    margin-top: 20px;
-    padding: 18px;
-    background: rgba(80,180,80,0.08);
-    border: 1px solid rgba(80,180,80,0.3);
-    border-radius: 12px;
-    text-align: center;
-  }
-
-  .new-user-result .pin-display {
-    font-family: 'Playfair Display', serif;
-    font-size: 42px;
-    font-weight: 700;
-    color: #90e890;
-    letter-spacing: 8px;
-    margin: 10px 0 6px;
-  }
-
-  .new-user-result p {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.6;
+    margin-top: 4px;
   }
 
   .new-user-result .name-display {
     font-size: 15px;
     color: var(--cream);
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 12px;
+    text-align: center;
   }
+
+  .wa-message-box {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(80,180,80,0.3);
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    color: var(--cream-soft);
+    background: rgba(80,180,80,0.06);
+    line-height: 1.65;
+    resize: none;
+    outline: none;
+    height: 200px;
+    margin-bottom: 10px;
+  }
+
+  .copy-btn {
+    width: 100%;
+    padding: 12px;
+    background: rgba(80,180,80,0.15);
+    border: 1px solid rgba(80,180,80,0.4);
+    border-radius: 10px;
+    color: #90e890;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 10px;
+  }
+
+  .copy-btn:active { background: rgba(80,180,80,0.25); }
 
   /* User rows */
   .user-row {
@@ -851,15 +865,24 @@
       if (data.error) throw new Error(data.error);
 
       // Show the generated PIN
+      const waText = `Hi ${data.name}! I've set you up on La Carta, a menu translation app I'm testing. Here's how to get started:
+
+🔗 https://menu-translator-one.vercel.app
+🔑 Your access code: ${data.pin}
+
+To add it to your home screen:
+iPhone — tap the Share button (box with arrow) then "Add to Home Screen"
+Android — tap the three-dot menu in Chrome then "Add to Home Screen"
+
+Any questions just message me!`;
+
       document.getElementById('add-user-form').style.display   = 'none';
       document.getElementById('add-user-result').style.display = 'block';
       document.getElementById('add-user-result').innerHTML = `
         <div class="new-user-result">
           <div class="name-display">${data.name} · Version ${data.version}</div>
-          <div class="pin-display">${data.pin}</div>
-          <p>Send this PIN to ${data.name} on WhatsApp.<br>They enter it when they first open the app.</p>
-        </div>
-        <div style="margin-top:16px;">
+          <textarea class="wa-message-box" id="wa-message-text" readonly>${waText}</textarea>
+          <button class="copy-btn" onclick="copyWaMessage()">📋 Copy message</button>
           <button class="modal-confirm-btn" onclick="finishAddUser()">Done</button>
         </div>`;
 
@@ -869,6 +892,23 @@
 
     } catch (err) {
       alert('Failed to add user: ' + err.message);
+    }
+  }
+
+  function copyWaMessage() {
+    const el  = document.getElementById('wa-message-text');
+    const btn = document.querySelector('.copy-btn');
+    el.select();
+    el.setSelectionRange(0, 99999);
+    try {
+      navigator.clipboard.writeText(el.value).then(() => {
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = '📋 Copy message'; }, 2500);
+      });
+    } catch (err) {
+      document.execCommand('copy');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.textContent = '📋 Copy message'; }, 2500);
     }
   }
 

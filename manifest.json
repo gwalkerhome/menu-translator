@@ -1,0 +1,21 @@
+{
+  "name": "La Carta",
+  "short_name": "La Carta",
+  "description": "Any language. Any menu. Anywhere in the world.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1C0B05",
+  "theme_color": "#1C0B05",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
