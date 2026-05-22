@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="/manifest.json">
 
-<title>v11 La Carta</title>
+<title>v12 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -1687,7 +1687,7 @@
 
     <div class="help-section" id="help-images-section">
       <div class="help-section-title">Dish images</div>
-      <p>Tap any dish on the menu, then tap <b>See a photo of this dish</b> to see a picture of it.</p>
+      <p>Tap any dish on the menu, then tap <b>See what this dish might look like</b> for an example image. Presentation varies by restaurant.</p>
     </div>
 
     <div class="help-section">
@@ -1732,7 +1732,7 @@
       ⚠️ This dish may conflict with your dietary requirements. Please confirm with restaurant staff before ordering.
     </div>
     <button class="dish-detail-img-btn" id="dish-detail-img-btn" onclick="showDishImageFromDetail()" style="display:none">
-      🔍 &nbsp; See a photo of this dish
+      🔍 &nbsp; See what this dish might look like
     </button>
   </div>
 </div>
@@ -2334,7 +2334,7 @@ Use ## markdown headings for all section headings and course categories — for 
     content.innerHTML = `
       <div class="modal-loading">
         <div class="modal-spinner"></div>
-        <p>${mode === 'openai' ? 'Generating image…' : 'Finding image…'}</p>
+        <p>${mode === 'openai' ? 'Generating an example…' : 'Finding an example…'}</p>
       </div>`;
     modal.classList.add('visible');
 
