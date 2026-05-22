@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="/manifest.json">
 
-<title>v10 La Carta</title>
+<title>v11 La Carta</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -596,6 +596,38 @@
     letter-spacing: 0.3px;
   }
 
+  /* ── RESULT HEADER ACTIONS ── */
+  .result-header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .result-action-btn {
+    background: none;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 8px;
+    color: var(--gold-soft);
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    letter-spacing: 0.3px;
+  }
+
+  .result-action-btn:active {
+    background: rgba(212,168,67,0.1);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .result-action-btn:disabled {
+    opacity: 0.7;
+    cursor: default;
+  }
+
   /* ── LOADING SCREEN ── */
   #loading-screen {
     display: none;
@@ -689,42 +721,274 @@
     margin: 20px 0;
   }
 
-  .dish-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 4px;
-  }
-
-  .dish-text {
-    flex: 1;
+  /* ── DISH CARD BUTTON ── */
+  .dish-card-btn {
+    display: block;
+    width: 100%;
+    background: rgba(255,255,255,0.018);
+    border: 1px solid rgba(212,168,67,0.07);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Lato', sans-serif;
     font-size: 15px;
     color: var(--cream-soft);
+    line-height: 1.75;
+    transition: background 0.15s, border-color 0.15s;
   }
 
-  .dish-text b { font-weight: 700; color: var(--cream); }
+  .dish-card-btn:active {
+    background: rgba(212,168,67,0.06);
+    border-color: rgba(212,168,67,0.18);
+  }
 
-  .img-btn {
-    flex-shrink: 0;
+  .dish-card-btn b {
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  /* ── DISH DETAIL OVERLAY ── */
+  #dish-detail-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(22, 8, 3, 0.97);
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    animation: fadeIn 0.2s ease both;
+  }
+
+  #dish-detail-overlay.visible { display: flex; }
+
+  .dish-detail-inner {
+    position: relative;
+    max-width: 520px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 72px 28px 60px;
+    animation: fadeUp 0.25s ease both;
+    flex: 1;
+  }
+
+  .dish-detail-close {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 50%;
+    color: var(--cream);
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .dish-detail-close:active {
+    background: rgba(212,168,67,0.12);
+  }
+
+  .dish-detail-ornament {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold-soft);
+    margin-bottom: 20px;
+    opacity: 0.6;
+  }
+
+  .dish-detail-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 7vw, 38px);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  .dish-detail-divider {
+    width: 48px;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin-bottom: 20px;
+  }
+
+  .dish-detail-desc {
+    font-size: 18px;
+    color: var(--cream-soft);
+    line-height: 1.85;
+    margin-bottom: 32px;
+  }
+
+  .dish-detail-warning {
+    padding: 14px 16px;
+    background: rgba(200,71,46,0.1);
+    border: 1px solid rgba(200,71,46,0.3);
+    border-radius: 10px;
+    font-size: 14px;
+    color: #f5bdb5;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  .dish-detail-img-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 18px 20px;
     background: none;
     border: 1px solid rgba(212,168,67,0.35);
+    border-radius: 14px;
     color: var(--gold);
-    border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-    line-height: 1.4;
-    margin-top: 1px;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, border-color 0.2s;
   }
 
-  .img-btn:active {
-    background: var(--gold);
-    color: var(--bg);
+  .dish-detail-img-btn:active {
+    background: rgba(212,168,67,0.08);
     border-color: var(--gold);
   }
 
+  /* ── PHOTO STAGING SCREEN ── */
+  #photo-staging-screen {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .staging-body {
+    padding: 32px 20px 60px;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .staging-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .staging-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  #staging-thumbs {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 32px;
+    width: 100%;
+  }
+
+  .staging-thumb {
+    flex: 1;
+    max-width: 160px;
+    text-align: center;
+  }
+
+  .staging-thumb img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid rgba(212,168,67,0.2);
+    display: block;
+  }
+
+  .staging-thumb-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .staging-translate-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    padding: 18px 28px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 55%, var(--terracotta-dark) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(200,71,46,0.45);
+    margin-bottom: 14px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .staging-translate-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 16px rgba(200,71,46,0.35);
+  }
+
+  #add-photo-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 320px;
+    padding: 14px 20px;
+    background: none;
+    border: 1px dashed rgba(212,168,67,0.3);
+    border-radius: 14px;
+    color: var(--gold-soft);
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  #add-photo-btn:active {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .staging-photo-hint {
+    font-size: 11px;
+    color: rgba(154,128,96,0.6);
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  /* ── RECOMMEND ── */
   .recommend-wrap {
     margin-top: 40px;
     padding-top: 24px;
@@ -983,6 +1247,164 @@
     color: var(--cream);
   }
 
+  /* ── SAVE NAME MODAL ── */
+  #save-name-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(8,3,1,0.87);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: fadeIn 0.2s ease both;
+  }
+
+  #save-name-modal.visible { display: flex; }
+
+  .save-modal-inner {
+    background: var(--bg-mid);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 20px;
+    padding: 32px 24px;
+    max-width: 360px;
+    width: 100%;
+    animation: scaleIn 0.2s ease both;
+  }
+
+  .save-modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .save-modal-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  #save-restaurant-name {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    color: var(--cream);
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #save-restaurant-name:focus { border-color: var(--gold); }
+  #save-restaurant-name::placeholder { color: var(--muted); }
+
+  .save-modal-btns {
+    display: flex;
+    gap: 10px;
+  }
+
+  .save-confirm-btn {
+    flex: 1;
+    padding: 14px;
+    background: linear-gradient(160deg, #D4573E 0%, var(--terracotta) 100%);
+    color: var(--cream);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .save-confirm-btn:active { opacity: 0.85; }
+
+  .save-cancel-btn {
+    padding: 14px 18px;
+    background: none;
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .save-cancel-btn:active { border-color: rgba(212,168,67,0.4); }
+
+  /* ── SAVED MENUS SCREEN ── */
+  #saved-menus-screen {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .saved-menus-body {
+    padding: 20px 20px 60px;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .saved-menu-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(212,168,67,0.12);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .saved-menu-item:active {
+    background: rgba(212,168,67,0.06);
+    border-color: rgba(212,168,67,0.25);
+  }
+
+  .saved-menu-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .saved-menu-date {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+  }
+
+  .saved-menu-arrow {
+    color: rgba(212,168,67,0.35);
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+
+  .saved-menus-empty {
+    text-align: center;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.8;
+    padding: 60px 20px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+
   /* ── IMAGE MODAL ── */
   #image-modal {
     display: none;
@@ -1115,9 +1537,30 @@
     <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handlePhoto(this)">
     <p class="hint">Any language &middot; Any cuisine &middot; Instant translation</p>
     <button id="prev-menu-btn" class="prev-menu-btn" onclick="showPreviousMenu()" style="display:none">↩ Previous menu</button>
+    <button id="saved-menus-btn" class="prev-menu-btn" onclick="showSavedMenus()" style="display:none">📚 Saved menus</button>
   </div>
   <div class="ornament-bottom">✦</div>
   <div class="version-label" id="version-label"></div>
+</div>
+
+<!-- ══ PHOTO STAGING SCREEN ══ -->
+<div id="photo-staging-screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="cancelPhotos()">← Cancel</button>
+    <span id="staging-count" style="font-size:13px; color:var(--muted);"></span>
+  </div>
+  <div class="staging-body">
+    <p class="staging-title">Ready to translate</p>
+    <p class="staging-subtitle">You can add up to 3 photos — useful for multi-page menus or<br>separate boards for starters and mains.</p>
+    <div id="staging-thumbs"></div>
+    <button class="staging-translate-btn" onclick="translateMenu()">
+      <span>Translate Menu</span><span>→</span>
+    </button>
+    <button id="add-photo-btn" onclick="addAnotherPhoto()">
+      <span>+</span><span>Add another photo</span>
+    </button>
+    <p class="staging-photo-hint">Up to 3 photos total</p>
+  </div>
 </div>
 
 <!-- ══ LOADING SCREEN ══ -->
@@ -1130,8 +1573,11 @@
 <!-- ══ RESULT SCREEN ══ -->
 <div id="result-screen">
   <div class="screen-header">
-    <h2>La Carta</h2>
     <button class="back-btn" onclick="goHome()">← New menu</button>
+    <div class="result-header-actions">
+      <button class="result-action-btn" id="save-menu-btn" onclick="showSaveModal()">Save</button>
+      <button class="result-action-btn" onclick="shareCurrentMenu()">Share</button>
+    </div>
   </div>
   <div class="result-body" id="result-body"></div>
 </div>
@@ -1231,16 +1677,23 @@
       <div class="help-section-title">Scanning a menu</div>
       <ol>
         <li>Tap <b>Analyse Menu</b> on the home screen</li>
-        <li>Take a photo of the menu, or choose one from your gallery</li>
+        <li>Take a photo of the menu — then tap <b>Translate Menu</b></li>
+        <li>Need to cover a bigger menu? Tap <b>Add another photo</b> first (up to 3 photos)</li>
         <li>The app translates every dish and gives you a one-sentence description</li>
-        <li>Tap <b>↩ Previous menu</b> to reload your last scan without taking a new photo</li>
+        <li>Tap any dish to see it in full with larger text</li>
       </ol>
       <p style="margin-top:10px; font-size:13px; color:var(--muted);">Good lighting makes a big difference. Try to get the whole menu, or one clear section, in the frame.</p>
     </div>
 
     <div class="help-section" id="help-images-section">
       <div class="help-section-title">Dish images</div>
-      <p>Tap the <b>🔍</b> button next to any dish to see a photo of it.</p>
+      <p>Tap any dish on the menu, then tap <b>See a photo of this dish</b> to see a picture of it.</p>
+    </div>
+
+    <div class="help-section">
+      <div class="help-section-title">Saving and sharing</div>
+      <p>After a translation, tap <b>Save</b> (top right) to save the menu under a restaurant name. Tap <b>Share</b> to send it to someone.</p>
+      <p>Saved menus appear on the home screen under <b>📚 Saved menus</b>.</p>
     </div>
 
     <div class="help-section">
@@ -1258,6 +1711,47 @@
   </div>
 </div>
 
+<!-- ══ SAVED MENUS SCREEN ══ -->
+<div id="saved-menus-screen">
+  <div class="screen-header">
+    <h2>Saved Menus</h2>
+    <button class="back-btn" onclick="show('home-screen')">← Back</button>
+  </div>
+  <div class="saved-menus-body" id="saved-menus-body"></div>
+</div>
+
+<!-- ══ DISH DETAIL OVERLAY ══ -->
+<div id="dish-detail-overlay">
+  <button class="dish-detail-close" onclick="closeDishDetail()">✕</button>
+  <div class="dish-detail-inner">
+    <div class="dish-detail-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="dish-detail-name" id="dish-detail-name"></div>
+    <div class="dish-detail-divider"></div>
+    <div class="dish-detail-desc" id="dish-detail-desc"></div>
+    <div class="dish-detail-warning" id="dish-detail-warning" style="display:none">
+      ⚠️ This dish may conflict with your dietary requirements. Please confirm with restaurant staff before ordering.
+    </div>
+    <button class="dish-detail-img-btn" id="dish-detail-img-btn" onclick="showDishImageFromDetail()" style="display:none">
+      🔍 &nbsp; See a photo of this dish
+    </button>
+  </div>
+</div>
+
+<!-- ══ SAVE NAME MODAL ══ -->
+<div id="save-name-modal">
+  <div class="save-modal-inner">
+    <div class="save-modal-title">Save this menu</div>
+    <p class="save-modal-sub">Give it a name so you can find it again — the restaurant name works well.</p>
+    <input type="text" id="save-restaurant-name" placeholder="e.g. Casa Pepe, Bar Manolo…"
+      autocorrect="off" autocapitalize="words"
+      onkeydown="if(event.key==='Enter') confirmSaveMenu()">
+    <div class="save-modal-btns">
+      <button class="save-confirm-btn" onclick="confirmSaveMenu()">Save menu</button>
+      <button class="save-cancel-btn" onclick="hideSaveModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ IMAGE MODAL ══ -->
 <div id="image-modal">
   <div class="modal-inner">
@@ -1267,18 +1761,20 @@
 </div>
 
 <script>
-  // ── CONFIG ──────────────────────────────────────────────────────────
+  // ── CONFIG ──────────────────────────────────────────────────────────────
   const imageCache = {};
-  let lastMenuText  = '';
-  let currentScreen = 'home-screen';
+  let lastMenuText      = '';
+  let currentScreen     = 'home-screen';
+  let capturedPhotos    = [];
+  let dishData          = [];
+  let currentDetailDish = '';
+  let resultScrollPos   = 0;
 
-  // ── USER & VERSION ───────────────────────────────────────────────────
+  // ── USER & VERSION ───────────────────────────────────────────────────────
   function getUser()    { return localStorage.getItem('lacarta_user')    || 'anonymous'; }
   function getVersion() { return localStorage.getItem('lacarta_version') || 'B'; }
   function getPin()     { return localStorage.getItem('lacarta_pin')     || ''; }
 
-  // Returns the image mode based on the user's version
-  // Version A = no images, Version B = pexels, Version C = openai
   function getImageMode() {
     var v = getVersion();
     if (v === 'C') return 'openai';
@@ -1286,14 +1782,12 @@
     return 'pexels';
   }
 
-  // ── ACCESS PIN ───────────────────────────────────────────────────────
+  // ── ACCESS PIN ───────────────────────────────────────────────────────────
   async function submitAccessPin() {
     const pin   = document.getElementById('pin-entry-input').value.trim();
     const errEl = document.getElementById('pin-entry-error');
     if (!pin) return;
-
     errEl.textContent = 'Checking…';
-
     try {
       const res  = await fetch('/api/config', {
         method:  'POST',
@@ -1301,7 +1795,6 @@
         body:    JSON.stringify({ action: 'login', pin })
       });
       const data = await res.json();
-
       if (data.valid) {
         localStorage.setItem('lacarta_pin',     pin);
         localStorage.setItem('lacarta_user',    data.name);
@@ -1321,7 +1814,6 @@
     }
   }
 
-  // Silent background check on each app open
   async function checkPinInBackground(pin) {
     try {
       const res  = await fetch('/api/config', {
@@ -1330,36 +1822,25 @@
         body:    JSON.stringify({ action: 'login', pin })
       });
       const data = await res.json();
-      if (!data.valid && data.reason === 'inactive') {
-        showSuspended();
-        return;
-      }
+      if (!data.valid && data.reason === 'inactive') { showSuspended(); return; }
       if (data.valid) {
-        // Refresh cached name and version in case Gary changed them
         localStorage.setItem('lacarta_user',    data.name);
         localStorage.setItem('lacarta_version', data.version);
         updateHomeLabels();
       }
-    } catch (err) {
-      // Network failure — use cached data, carry on silently
-    }
+    } catch (err) { /* silent */ }
   }
 
-  // ── ANALYTICS ────────────────────────────────────────────────────────
+  // ── ANALYTICS ────────────────────────────────────────────────────────────
   function logEvent(event, extras) {
     fetch('/api/log', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({
-        user:    getUser(),
-        event,
-        version: getVersion(),
-        ...extras
-      })
+      body:    JSON.stringify({ user: getUser(), event, version: getVersion(), ...extras })
     }).catch(() => {});
   }
 
-  // ── PROFILE ──────────────────────────────────────────────────────────
+  // ── PROFILE ──────────────────────────────────────────────────────────────
   const LANG_NAMES = {
     'en-GB': 'British English', 'en-US': 'American English', 'en-AU': 'Australian English',
     'es': 'Spanish', 'fr': 'French', 'de': 'German', 'it': 'Italian',
@@ -1374,7 +1855,6 @@
   function saveProfile() {
     const dietary     = [...document.querySelectorAll('#dietary-pills .pill.active')].map(p => p.dataset.value);
     const preferences = [...document.querySelectorAll('#preference-pills .pill.active')].map(p => p.dataset.value);
-
     const profile = {
       language:    document.getElementById('pref-language').value,
       nationality: document.getElementById('pref-nationality').value.trim(),
@@ -1382,7 +1862,6 @@
       preferences,
       favourites:  document.getElementById('pref-favourites').value.trim()
     };
-
     localStorage.setItem('lacarta_profile', JSON.stringify(profile));
     updateProfileIcon();
     show('home-screen');
@@ -1402,7 +1881,6 @@
     if (p.language)    document.getElementById('pref-language').value    = p.language;
     if (p.nationality) document.getElementById('pref-nationality').value = p.nationality;
     if (p.favourites)  document.getElementById('pref-favourites').value  = p.favourites;
-
     document.querySelectorAll('#dietary-pills .pill').forEach(pill => {
       pill.classList.toggle('active', (p.dietary || []).includes(pill.dataset.value));
     });
@@ -1445,18 +1923,15 @@
            !!(p.dietary && p.dietary.length) || !!p.nationality;
   }
 
-  // ── PILL TOGGLES ─────────────────────────────────────────────────────
+  // ── PILL TOGGLES ─────────────────────────────────────────────────────────
   document.querySelectorAll('.pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      pill.classList.toggle('active');
-    });
+    pill.addEventListener('click', () => pill.classList.toggle('active'));
   });
 
-  // ── STARTUP ──────────────────────────────────────────────────────────
+  // ── STARTUP ──────────────────────────────────────────────────────────────
   function init() {
     const pin = getPin();
     if (pin) {
-      // User has logged in before — show home immediately, check in background
       logEvent('app_open');
       showHome();
       checkPinInBackground(pin);
@@ -1468,13 +1943,16 @@
   function showHome() {
     updateProfileIcon();
     updateHomeLabels();
-    updatePreviousMenuBtn();
+    updateHomeButtons();
     show('home-screen');
   }
 
   function showSuspended() {
-    ['pin-entry-screen','home-screen','loading-screen','result-screen','profile-screen','suspended-screen'].forEach(s => {
-      document.getElementById(s).style.display = 'none';
+    const screens = ['pin-entry-screen','home-screen','loading-screen','result-screen',
+                     'profile-screen','suspended-screen','photo-staging-screen','saved-menus-screen'];
+    screens.forEach(s => {
+      const el = document.getElementById(s);
+      if (el) el.style.display = 'none';
     });
     document.getElementById('suspended-screen').style.display = 'flex';
   }
@@ -1486,22 +1964,40 @@
     if (versionEl) versionEl.textContent = 'Version ' + getVersion();
   }
 
+  function updateHomeButtons() {
+    const prevBtn  = document.getElementById('prev-menu-btn');
+    if (prevBtn)  prevBtn.style.display  = localStorage.getItem('lacarta_last_menu') ? 'block' : 'none';
+    const savedBtn = document.getElementById('saved-menus-btn');
+    if (savedBtn) savedBtn.style.display = getSavedMenus().length > 0 ? 'block' : 'none';
+  }
+
   function showProfile() {
     loadProfileIntoForm();
     show('profile-screen');
   }
 
-  // ── NAVIGATION ───────────────────────────────────────────────────────
+  // ── NAVIGATION ───────────────────────────────────────────────────────────
   function show(id) {
-    ['pin-entry-screen','suspended-screen','home-screen','loading-screen','result-screen','profile-screen','help-screen'].forEach(s => {
-      document.getElementById(s).style.display = 'none';
+    // Close overlays when navigating
+    const dishOverlay = document.getElementById('dish-detail-overlay');
+    if (dishOverlay) dishOverlay.classList.remove('visible');
+    const saveModal = document.getElementById('save-name-modal');
+    if (saveModal)   saveModal.classList.remove('visible');
+    document.body.style.overflow = '';
+
+    const allScreens = ['pin-entry-screen','suspended-screen','home-screen','loading-screen',
+                        'result-screen','profile-screen','help-screen',
+                        'photo-staging-screen','saved-menus-screen'];
+    allScreens.forEach(s => {
+      const el = document.getElementById(s);
+      if (el) el.style.display = 'none';
     });
     document.getElementById(id).style.display = 'flex';
     currentScreen = id;
+    window.scrollTo(0, 0);
   }
 
   function showHelp() {
-    // Hide the dish images section for Version A users
     const imgSection = document.getElementById('help-images-section');
     if (imgSection) imgSection.style.display = getImageMode() ? 'block' : 'none';
     show('help-screen');
@@ -1509,8 +2005,9 @@
 
   function goHome() {
     document.getElementById('file-input').value = '';
-    lastMenuText = '';
-    updatePreviousMenuBtn();
+    lastMenuText   = '';
+    capturedPhotos = [];
+    updateHomeButtons();
     show('home-screen');
   }
 
@@ -1522,34 +2019,74 @@
     show('result-screen');
   }
 
-  function updatePreviousMenuBtn() {
-    const btn = document.getElementById('prev-menu-btn');
-    if (btn) btn.style.display = localStorage.getItem('lacarta_last_menu') ? 'block' : 'none';
-  }
-
   init();
 
-  // ── PHOTO HANDLING ────────────────────────────────────────────────────
+  // ── PHOTO HANDLING ────────────────────────────────────────────────────────
   async function handlePhoto(input) {
     if (!input.files || !input.files[0]) return;
     const file = input.files[0];
-    show('loading-screen');
+    input.value = ''; // allow re-selection of the same file
     try {
       const base64 = await fileToBase64(file);
-      const { text: menuText, langFrom } = await analyseMenu(base64);
+      capturedPhotos.push(base64);
+      showStagingScreen();
+    } catch(err) {
+      show('home-screen');
+    }
+  }
+
+  function showStagingScreen() {
+    updateStagingThumbs();
+    show('photo-staging-screen');
+  }
+
+  function updateStagingThumbs() {
+    const container = document.getElementById('staging-thumbs');
+    if (!container) return;
+    container.innerHTML = capturedPhotos.map((b64, i) => `
+      <div class="staging-thumb">
+        <img src="data:image/jpeg;base64,${b64}" alt="Photo ${i+1}">
+        <div class="staging-thumb-label">Photo ${i+1}</div>
+      </div>`).join('');
+
+    const addBtn  = document.getElementById('add-photo-btn');
+    if (addBtn)   addBtn.style.display = capturedPhotos.length < 3 ? 'flex' : 'none';
+
+    const countEl = document.getElementById('staging-count');
+    if (countEl)  countEl.textContent = capturedPhotos.length === 1
+      ? '1 photo ready' : `${capturedPhotos.length} photos ready`;
+  }
+
+  function addAnotherPhoto() {
+    document.getElementById('file-input').click();
+  }
+
+  function cancelPhotos() {
+    capturedPhotos = [];
+    document.getElementById('file-input').value = '';
+    show('home-screen');
+  }
+
+  async function translateMenu() {
+    if (capturedPhotos.length === 0) return;
+    show('loading-screen');
+    try {
+      const { text: menuText, langFrom } = await analyseMenu(capturedPhotos);
       lastMenuText = menuText;
       localStorage.setItem('lacarta_last_menu', menuText);
-      updatePreviousMenuBtn();
       const p      = getProfile();
       const langTo = LANG_NAMES[p.language] || 'British English';
       logEvent('menu_scan', { success: true, language: langFrom + ' → ' + langTo, imageMode: getImageMode() || 'none' });
+      capturedPhotos = [];
       renderResult(menuText);
       show('result-screen');
-    } catch (err) {
+    } catch(err) {
       logEvent('menu_scan', { success: false, details: err.message });
-      show('result-screen');
+      capturedPhotos = [];
+      renderResult('');
       document.getElementById('result-body').innerHTML =
         `<div class="error-box"><strong>Something went wrong</strong>${err.message || JSON.stringify(err)}</div>`;
+      show('result-screen');
     }
   }
 
@@ -1578,9 +2115,13 @@
     });
   }
 
-  // ── ANALYSE MENU ──────────────────────────────────────────────────────
-  async function analyseMenu(base64Image) {
+  // ── ANALYSE MENU ──────────────────────────────────────────────────────────
+  async function analyseMenu(base64Images) {
     const profileSection = buildProfilePromptSection();
+    const multiNote = base64Images.length > 1
+      ? '\n\nThis menu spans multiple images — treat all of them as one continuous menu.'
+      : '';
+
     const prompt = `You are a menu translation and explanation assistant for travellers.
 
 On the very first line of your response write "LANG:" followed by the detected language of the menu — for example "LANG:Spanish" or "LANG:Catalan" — then leave a blank line before your menu analysis.
@@ -1595,7 +2136,12 @@ If the menu is anything other than straightforward, start with a one-sentence ex
 
 Format every dish name in bold using **dish name** markdown syntax, with its description on the same line immediately after.
 
-Use ## markdown headings for all section headings and course categories — for example ## Starters, ## Main Courses, ## Desserts, ## Drinks. Never use bold (**) for section headings or category labels — only for actual dish names.${profileSection}`;
+Use ## markdown headings for all section headings and course categories — for example ## Starters, ## Main Courses, ## Desserts, ## Drinks. Never use bold (**) for section headings or category labels — only for actual dish names.${profileSection}${multiNote}`;
+
+    const imageContent = base64Images.map(b64 => ({
+      type: 'image_url',
+      image_url: { url: `data:image/jpeg;base64,${b64}` }
+    }));
 
     const response = await fetch('/api/chat', {
       method:  'POST',
@@ -1603,7 +2149,7 @@ Use ## markdown headings for all section headings and course categories — for 
       body:    JSON.stringify({
         model:    'gpt-4o',
         messages: [{ role: 'user', content: [
-          { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } },
+          ...imageContent,
           { type: 'text', text: prompt }
         ]}],
         max_tokens: 2000
@@ -1623,8 +2169,13 @@ Use ## markdown headings for all section headings and course categories — for 
     return { text, langFrom };
   }
 
-  // ── RENDER RESULT ─────────────────────────────────────────────────────
+  // ── RENDER RESULT ─────────────────────────────────────────────────────────
   function renderResult(text) {
+    // Reset save button state
+    const saveBtn = document.getElementById('save-menu-btn');
+    if (saveBtn) { saveBtn.textContent = 'Save'; saveBtn.disabled = false; }
+
+    dishData = [];
     const lines    = text.split('\n');
     const showImgs = getImageMode() !== null;
     let html = '';
@@ -1644,15 +2195,16 @@ Use ## markdown headings for all section headings and course categories — for 
         if (boldMatch) {
           const dishName  = boldMatch[1];
           const formatted = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-          if (showImgs) {
-            html += `
-              <div class="dish-row">
-                <div class="dish-text">${formatted}</div>
-                <button class="img-btn" onclick="showDishImage('${escapeDishName(dishName)}')">🔍</button>
-              </div>`;
-          } else {
-            html += `<div class="dish-text" style="margin-bottom:4px;">${formatted}</div>`;
-          }
+
+          // Extract description — everything after **name**
+          const desc       = line.replace(/^\*\*(.*?)\*\*/, '').replace(/^[\s⚠️—\-]+/, '').trim();
+          const hasWarning = line.includes('⚠️');
+          const cleanName  = dishName.replace(/⚠️/g, '').trim();
+
+          const idx = dishData.length;
+          dishData.push({ name: cleanName, desc, hasWarning, showImgs });
+
+          html += `<button class="dish-card-btn" onclick="openDishDetail(${idx})">${formatted}</button>`;
         } else {
           html += `<p>${line}</p>`;
         }
@@ -1680,13 +2232,41 @@ Use ## markdown headings for all section headings and course categories — for 
     }
 
     document.getElementById('result-body').innerHTML = html;
+    updateHomeButtons();
   }
 
-  function escapeDishName(name) {
-    return name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  // ── DISH DETAIL ───────────────────────────────────────────────────────────
+  function openDishDetail(idx) {
+    const dish = dishData[idx];
+    if (!dish) return;
+
+    resultScrollPos   = window.scrollY;
+    currentDetailDish = dish.name;
+
+    document.getElementById('dish-detail-name').textContent = dish.name;
+    document.getElementById('dish-detail-desc').textContent = dish.desc;
+
+    const warnEl = document.getElementById('dish-detail-warning');
+    if (warnEl)  warnEl.style.display = dish.hasWarning ? 'block' : 'none';
+
+    const imgBtn = document.getElementById('dish-detail-img-btn');
+    if (imgBtn)  imgBtn.style.display  = dish.showImgs  ? 'flex'  : 'none';
+
+    document.getElementById('dish-detail-overlay').classList.add('visible');
+    document.body.style.overflow = 'hidden';
   }
 
-  // ── RECOMMENDATION ────────────────────────────────────────────────────
+  function closeDishDetail() {
+    document.getElementById('dish-detail-overlay').classList.remove('visible');
+    document.body.style.overflow = '';
+    requestAnimationFrame(() => window.scrollTo(0, resultScrollPos));
+  }
+
+  function showDishImageFromDetail() {
+    showDishImage(currentDetailDish);
+  }
+
+  // ── RECOMMENDATION ────────────────────────────────────────────────────────
   async function getRecommendation() {
     const btn  = document.getElementById('recommend-btn');
     const card = document.getElementById('recommend-card');
@@ -1736,7 +2316,7 @@ Use ## markdown headings for all section headings and course categories — for 
         </div>`;
       btn.style.display = 'none';
 
-    } catch (err) {
+    } catch(err) {
       logEvent('recommendation', { success: false });
       card.innerHTML = `<div class="error-box"><strong>Couldn't get a recommendation</strong>${err.message}</div>`;
       btn.disabled      = false;
@@ -1744,12 +2324,11 @@ Use ## markdown headings for all section headings and course categories — for 
     }
   }
 
-  // ── DISH IMAGE MODAL ──────────────────────────────────────────────────
+  // ── DISH IMAGE MODAL ──────────────────────────────────────────────────────
   async function showDishImage(dishName) {
     const modal   = document.getElementById('image-modal');
     const content = document.getElementById('modal-content');
     const mode    = getImageMode();
-
     if (!mode) return;
 
     content.innerHTML = `
@@ -1766,10 +2345,9 @@ Use ## markdown headings for all section headings and course categories — for 
       content.innerHTML = `
         <img class="modal-img" src="${imgSrc}" alt="${dishName}">
         <p class="modal-label">${dishName}</p>`;
-    } catch (err) {
+    } catch(err) {
       logEvent('image_view', { details: dishName, imageMode: mode, success: false });
-      content.innerHTML = `
-        <div class="error-box"><strong>Couldn't load image</strong>${err.message}</div>`;
+      content.innerHTML = `<div class="error-box"><strong>Couldn't load image</strong>${err.message}</div>`;
     }
   }
 
@@ -1800,16 +2378,109 @@ Use ## markdown headings for all section headings and course categories — for 
 
   function closeModal() {
     document.getElementById('image-modal').classList.remove('visible');
-    if (currentScreen) {
-      document.getElementById(currentScreen).style.display = 'flex';
-    }
   }
 
   document.getElementById('image-modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
 
-  // ── SERVICE WORKER (enables Android home screen install) ─────────────
+  // ── SAVE MENU ─────────────────────────────────────────────────────────────
+  function getSavedMenus() {
+    try { return JSON.parse(localStorage.getItem('lacarta_saved_menus')) || []; }
+    catch(e) { return []; }
+  }
+
+  function showSaveModal() {
+    if (!lastMenuText) return;
+    document.getElementById('save-restaurant-name').value = '';
+    document.getElementById('save-name-modal').classList.add('visible');
+    setTimeout(() => document.getElementById('save-restaurant-name').focus(), 150);
+  }
+
+  function hideSaveModal() {
+    document.getElementById('save-name-modal').classList.remove('visible');
+  }
+
+  function confirmSaveMenu() {
+    const name  = document.getElementById('save-restaurant-name').value.trim() || 'Unnamed restaurant';
+    const menus = getSavedMenus();
+    menus.unshift({
+      name,
+      date: new Date().toLocaleDateString('en-GB'),
+      text: lastMenuText
+    });
+    if (menus.length > 20) menus.pop();
+    localStorage.setItem('lacarta_saved_menus', JSON.stringify(menus));
+    hideSaveModal();
+
+    // Show brief confirmation on button
+    const btn = document.getElementById('save-menu-btn');
+    if (btn) {
+      btn.textContent = 'Saved ✓';
+      btn.disabled    = true;
+      setTimeout(() => { btn.textContent = 'Save'; btn.disabled = false; }, 2500);
+    }
+
+    updateHomeButtons();
+  }
+
+  function showSavedMenus() {
+    const menus = getSavedMenus();
+    const body  = document.getElementById('saved-menus-body');
+    if (menus.length === 0) {
+      body.innerHTML = `<p class="saved-menus-empty">No saved menus yet.<br><br>After translating a menu, tap <em>Save</em> to keep it here.</p>`;
+    } else {
+      body.innerHTML = menus.map((m, i) => `
+        <div class="saved-menu-item" onclick="loadSavedMenu(${i})">
+          <div>
+            <div class="saved-menu-name">${m.name}</div>
+            <div class="saved-menu-date">${m.date}</div>
+          </div>
+          <span class="saved-menu-arrow">›</span>
+        </div>`).join('');
+    }
+    show('saved-menus-screen');
+  }
+
+  function loadSavedMenu(idx) {
+    const menus = getSavedMenus();
+    if (!menus[idx]) return;
+    lastMenuText = menus[idx].text;
+    renderResult(lastMenuText);
+    show('result-screen');
+  }
+
+  // ── SHARE MENU ────────────────────────────────────────────────────────────
+  async function shareCurrentMenu() {
+    if (!lastMenuText) return;
+
+    const shareData = { title: 'La Carta — Menu Translation', text: lastMenuText };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        logEvent('menu_share', { success: true });
+      } catch(err) {
+        if (err.name !== 'AbortError') copyMenuToClipboard();
+      }
+    } else {
+      copyMenuToClipboard();
+    }
+  }
+
+  function copyMenuToClipboard() {
+    navigator.clipboard.writeText(lastMenuText).then(() => {
+      const btns = document.querySelectorAll('.result-action-btn');
+      btns.forEach(b => {
+        if (b.textContent === 'Share') {
+          b.textContent = 'Copied!';
+          setTimeout(() => { b.textContent = 'Share'; }, 2500);
+        }
+      });
+    }).catch(() => {});
+  }
+
+  // ── SERVICE WORKER ────────────────────────────────────────────────────────
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   }
